@@ -172,4 +172,5 @@ def test_generate_6sheet_excel():
     ws2 = wb["Store_SKU_Orders"]
     assert ws2.cell(row=2, column=1).value == "101"
     assert ws2.cell(row=2, column=3).value == "100003"
-    assert ws2.cell(row=2, column=14).value == 24.0
+    assert ws2.cell(row=2, column=11).value == 25.0  # ForecastDemand
+    assert ws2.cell(row=2, column=23).value == 24.0  # RecommendedOrderUnits

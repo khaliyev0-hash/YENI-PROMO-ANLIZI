@@ -16,6 +16,7 @@ from app.distribution.excel_processor import (
 from app.distribution.sql_engine import cross_validate_with_master_data
 from app.distribution.service import run_distribution_planning
 from app.distribution.history_store import list_planning_runs, get_planning_run
+from app.distribution.backtest import run_forecast_backtest
 
 router = APIRouter(prefix="/api", tags=["Distribution Planning"])
 
@@ -130,6 +131,9 @@ class PlanningRunRequest(BaseModel):
     history_days: int = 30
     stockout_correction: bool = True
     promo_uplift_pct: float = 0.0
+    include_yoy_history: bool = True
+    yoy_weight: float = 0.30
+    yoy_years_back: int = 1
     rows: List[ImportedRow]
 
 @router.post("/planning-runs")
@@ -149,7 +153,10 @@ def create_planning_run(payload: PlanningRunRequest):
             include_incoming_stock=payload.include_incoming_stock,
             history_days=payload.history_days,
             stockout_correction=payload.stockout_correction,
-            promo_uplift_pct=payload.promo_uplift_pct
+            promo_uplift_pct=payload.promo_uplift_pct,
+            include_yoy_history=payload.include_yoy_history,
+            yoy_weight=payload.yoy_weight,
+            yoy_years_back=payload.yoy_years_back
         )
         return {
             "status": "success",
@@ -257,3 +264,39 @@ def export_planning_run_excel(run_id: str):
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers={"Content-Disposition": f"attachment; filename={filename}"}
     )
+
+# ----------------------------------------------------
+# 4. Forecast Backtesting (Rule 15)
+# ----------------------------------------------------
+class BacktestRequest(BaseModel):
+    product_codes: List[str]
+    store_codes: Optional[List[str]] = None
+    test_start_date: Optional[str] = None  # YYYY-MM-DD
+    duration_days: int = 7
+    history_days: int = 30
+    yoy_weight: float = 0.30
+    min_data_points: int = 5
+
+@router.post("/distribution/backtest")
+def run_distribution_backtest(payload: BacktestRequest):
+    """
+    Backtests forecast algorithms on verified historical database actuals.
+    Computes WAPE and Forecast Bias %, or gracefully returns INSUFFICIENT_DATA.
+    """
+    start_dt = None
+    if payload.test_start_date:
+        try:
+            start_dt = datetime.strptime(payload.test_start_date, "%Y-%m-%d").date()
+        except ValueError:
+            raise HTTPException(status_code=400, detail="test_start_date formatı YYYY-MM-DD olmalıdır.")
+
+    res = run_forecast_backtest(
+        product_codes=payload.product_codes,
+        store_codes=payload.store_codes,
+        test_start_date=start_dt,
+        duration_days=payload.duration_days,
+        history_days=payload.history_days,
+        yoy_weight=payload.yoy_weight,
+        min_data_points=payload.min_data_points
+    )
+    return res

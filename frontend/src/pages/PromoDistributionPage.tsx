@@ -84,7 +84,10 @@ export const PromoDistributionPage: React.FC = () => {
   const [durationDays, setDurationDays] = useState<number>(7);
   const [targetEndingStock, setTargetEndingStock] = useState<number>(0);
   const [promoUpliftPct, setPromoUpliftPct] = useState<number>(30); // Default +30% recommendation
-  const [stockoutCorrection, setStockoutCorrection] = useState<boolean>(true); // Active days velocity correction
+  const [stockoutCorrection, setStockoutCorrection] = useState<boolean>(false); // Deactivated by default: SQL lacks daily historical stock
+  const [includeYoYHistory, setIncludeYoYHistory] = useState<boolean>(true); // Past years from fnc_TS_SALES_REPORT_FOR_PLANNING_UNION
+  const [yoyWeight, setYoyWeight] = useState<number>(0.30); // 30% weight to YoY historical demand
+  const [yoyYearsBack, setYoyYearsBack] = useState<number>(1); // 1 year back (2025)
 
   // Execution State
   const [calculating, setCalculating] = useState<boolean>(false);
@@ -209,6 +212,9 @@ export const PromoDistributionPage: React.FC = () => {
       history_days: 30,
       stockout_correction: stockoutCorrection,
       promo_uplift_pct: promoUpliftPct,
+      include_yoy_history: includeYoYHistory,
+      yoy_weight: yoyWeight,
+      yoy_years_back: yoyYearsBack,
       rows: previewData.preview_rows
     };
 
@@ -594,10 +600,10 @@ export const PromoDistributionPage: React.FC = () => {
                       />
                       <div>
                         <label htmlFor="stockout_corr_chk" className="text-slate-800 dark:text-slate-200 font-bold cursor-pointer block">
-                          🎯 Stok-out Düzəlişi (Aktiv Satış Günləri)
+                          🛡️ Tarixi Stoksuzluq Düzəlişi (Deaktiv - Təhlükəsiz Rejim)
                         </label>
                         <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                          Məhsul 30 günün yalnız bir hissəsində stokda olubsa, satış sürətini yalnız aktiv günlərə bölərək real tələbatı bərpa edir.
+                          SQL Server-də yalnız hazırkı anbar qalığı mövcuddur (30 günlük stok tarixçəsi yoxdur). Süni şişirtmənin qarşısını almaq üçün tələbat bütün 30 təqvim gününə bölünür (ADS30).
                         </p>
                       </div>
                     </div>
@@ -617,6 +623,66 @@ export const PromoDistributionPage: React.FC = () => {
                     />
                     <span className="text-[10px] text-slate-400">Kampaniya bitəndə rəfdə qalması arzulanan ehtiyat.</span>
                   </div>
+                </div>
+
+                {/* 3. YoY Historical Seasonality from fnc_TS_SALES_REPORT_FOR_PLANNING_UNION */}
+                <div className="p-3.5 rounded-xl bg-indigo-50/60 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-900/40">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-1.5">
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="yoy_history_chk"
+                        checked={includeYoYHistory}
+                        onChange={(e) => setIncludeYoYHistory(e.target.checked)}
+                        className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                      />
+                      <label htmlFor="yoy_history_chk" className="font-bold text-slate-800 dark:text-slate-200 cursor-pointer flex items-center space-x-1.5">
+                        <span>📅 Keçən İlin Eyni Həftəsi ilə Müqayisə (YoY Mövsümilik):</span>
+                        <span className="text-indigo-600 dark:text-indigo-400 font-extrabold text-sm">{Math.round(yoyWeight * 100)}% çəki</span>
+                      </label>
+                    </div>
+                    <span className="text-[10px] font-mono text-indigo-600 dark:text-indigo-400 bg-indigo-100 dark:bg-indigo-900/40 px-2 py-0.5 rounded-md self-start sm:self-auto">
+                      fnc_TS_SALES_REPORT_FOR_PLANNING_UNION
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-2 sm:pl-6">
+                    {yoyYearsBack} il əvvəlki eyni təqvim həftəsinin (52 həftə əvvəl, bazar-şənbə) real və promo satışlarını oxuyur və cari trendlə balanslaşdırır.
+                  </p>
+                  {includeYoYHistory && (
+                    <div className="sm:pl-6 flex flex-wrap items-center gap-2 pt-1">
+                      <span className="text-slate-600 dark:text-slate-400 font-semibold text-[11px]">Tarixi Çəki:</span>
+                      {[
+                        { label: '10% Yüngül', val: 0.10 },
+                        { label: '30% Balanslı (Tövsiyə)', val: 0.30 },
+                        { label: '50% Bərabər Pay', val: 0.50 }
+                      ].map((item) => (
+                        <button
+                          key={item.val}
+                          type="button"
+                          onClick={() => setYoyWeight(item.val)}
+                          className={`px-2.5 py-1 rounded-lg font-bold text-xs transition-all cursor-pointer ${
+                            yoyWeight === item.val
+                              ? 'bg-indigo-600 text-white shadow-xs'
+                              : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:border-indigo-400'
+                          }`}
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+
+                      <div className="flex items-center space-x-1.5 pl-3 border-l border-indigo-200 dark:border-indigo-800">
+                        <span className="text-slate-500 text-[11px]">Müqayisə ili:</span>
+                        <select
+                          value={yoyYearsBack}
+                          onChange={(e) => setYoyYearsBack(parseInt(e.target.value) || 1)}
+                          className="px-2 py-1 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 font-bold text-xs"
+                        >
+                          <option value={1}>1 İl Əvvəl (2025)</option>
+                          <option value={2}>2 İl Əvvəl (2024)</option>
+                        </select>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -751,10 +817,27 @@ export const PromoDistributionPage: React.FC = () => {
                 <span>🚀 Uplift:</span>
                 <span className="font-extrabold">+{resultsData.summary?.promo_uplift_pct ?? 0}%</span>
               </span>
-              <span className="px-2.5 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 font-bold text-xs flex items-center space-x-1">
-                <span>🎯 Stok-out:</span>
-                <span className="font-extrabold">{resultsData.summary?.stockout_correction ? 'Aktiv' : 'Deaktiv'}</span>
+              <span className="px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs flex items-center space-x-1">
+                <span>🛡️ Stoksuzluq:</span>
+                <span className="font-extrabold text-slate-500">Deaktiv (ADS30)</span>
               </span>
+              <span className="px-2.5 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 font-bold text-xs flex items-center space-x-1">
+                <span>📅 YoY (UNION):</span>
+                <span className="font-extrabold">{resultsData.summary?.include_yoy_history ? `${Math.round((resultsData.summary?.yoy_weight || 0.3) * 100)}% Keçən İl` : 'Deaktiv'}</span>
+              </span>
+              {resultsData.summary?.confidence_summary && (
+                <div className="flex items-center space-x-1 text-xs">
+                  <span className="px-2 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-bold text-[11px]" title="Etibarlı Tarixçə (Cari Trend və/və ya YoY)">
+                    NORMAL: {resultsData.summary.confidence_summary.NORMAL ?? 0}
+                  </span>
+                  <span className="px-2 py-1 rounded-lg bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 font-bold text-[11px]" title="Tək Mənbə və ya Fallback Siyasəti">
+                    LIMITED: {resultsData.summary.confidence_summary.LIMITED ?? 0}
+                  </span>
+                  <span className="px-2 py-1 rounded-lg bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 font-bold text-[11px]" title="Tarixçə Yoxdur / Blokaj / Əllə Yoxlama">
+                    REVIEW: {resultsData.summary.confidence_summary.MANUAL_REVIEW ?? 0}
+                  </span>
+                </div>
+              )}
 
               <button
                 onClick={() => exportExcelReport(resultsData.run_id)}
@@ -792,11 +875,12 @@ export const PromoDistributionPage: React.FC = () => {
                 >
                   <option value="ALL">Bütün Statuslar</option>
                   <option value="OK">Yalnız OK</option>
+                  <option value="ZERO_CURRENT_SALES_YOY_FALLBACK">Cari 0 Satış (YoY Fallback)</option>
                   <option value="FALLBACK_NETWORK_AVG">Şəbəkə Ortası Proqnoz</option>
+                  <option value="DOUBLE_PROMO_RISK">İkiqat Promo Riski</option>
                   <option value="EXCEEDS_SHELF_CAPACITY">Rəf Tutumunu Aşanlar</option>
                   <option value="ROUNDING_EXCESS_HIGH">Artıq Qutu Yarananlar</option>
                   <option value="SUPPLIER_BLOCKED">Təchizatçı Bloklu (0 Sifariş)</option>
-                  <option value="STOCK_CONFLICT">Stok Ziddiyyəti Olanlar</option>
                 </select>
               </div>
 
@@ -819,7 +903,11 @@ export const PromoDistributionPage: React.FC = () => {
                       <th className="py-2.5 px-3">Mağaza</th>
                       <th className="py-2.5 px-3">Məhsul Kodu</th>
                       <th className="py-2.5 px-3">Məhsul Adı</th>
-                      <th className="py-2.5 px-3 text-right">Proqnoz Tələb</th>
+                      <th className="py-2.5 px-3 text-right">Cari Trend (30g)</th>
+                      <th className="py-2.5 px-3 text-right text-indigo-600 dark:text-indigo-400">Keçən İl (YoY)</th>
+                      <th className="py-2.5 px-3 text-right font-black text-blue-600 dark:text-blue-400">Proqnoz Tələb</th>
+                      <th className="py-2.5 px-3 text-center">Metod</th>
+                      <th className="py-2.5 px-3 text-center">Dərəcə</th>
                       <th className="py-2.5 px-3 text-right">Cari Stok</th>
                       <th className="py-2.5 px-3 text-right">Rəf Tutumu</th>
                       <th className="py-2.5 px-3 text-right">Xalis Ehtiyac</th>
@@ -838,11 +926,47 @@ export const PromoDistributionPage: React.FC = () => {
                           <td className="py-2 px-3 font-mono font-bold text-blue-600">{item.store_code}</td>
                           <td className="py-2 px-3 font-mono">{item.product_code}</td>
                           <td className="py-2 px-3 truncate max-w-xs" title={item.product_name}>{item.product_name}</td>
-                          <td className="py-2 px-3 text-right font-semibold text-blue-600">
+                          <td className="py-2 px-3 text-right font-mono text-slate-500">
+                            {item.recent_trend_demand !== null && item.recent_trend_demand !== undefined ? item.recent_trend_demand : '-'}
+                          </td>
+                          <td className="py-2 px-3 text-right font-mono">
+                            {item.yoy_historical_sales !== null && item.yoy_historical_sales !== undefined ? (
+                              <div className="text-indigo-600 dark:text-indigo-400 font-bold" title={item.yoy_promo_sales > 0 ? `Keçən il promo satışı: ${item.yoy_promo_sales}` : 'Normal satış'}>
+                                {item.yoy_historical_sales}
+                                {item.yoy_promo_sales > 0 && (
+                                  <span className="ml-1 px-1 py-0.5 bg-purple-100 text-purple-700 text-[9px] rounded font-semibold">prm</span>
+                                )}
+                              </div>
+                            ) : (
+                              <span className="text-slate-300 dark:text-slate-600">-</span>
+                            )}
+                          </td>
+                          <td className="py-2 px-3 text-right font-bold text-blue-600 dark:text-blue-400">
                             <div>{item.forecast_demand}</div>
                             {item.warning_status === 'FALLBACK_NETWORK_AVG' && (
                               <span className="text-[10px] text-blue-500 font-normal">şəbəkə ort.</span>
                             )}
+                          </td>
+                          <td className="py-2 px-3 text-center">
+                            <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300" title={item.forecast_method}>
+                              {item.forecast_method === 'BLENDED_TREND_YOY' ? 'TREND+YoY' :
+                               item.forecast_method === 'CURRENT_TREND_ONLY' ? 'TREND' :
+                               item.forecast_method === 'YOY_FALLBACK' ? 'YoY FALLBACK' :
+                               item.forecast_method === 'NETWORK_AVERAGE_FALLBACK' ? 'ŞƏBƏKƏ ORT.' :
+                               item.forecast_method === 'INITIAL_SHELF_FILL' ? 'RƏF DOLDURMA' :
+                               item.forecast_method}
+                            </span>
+                          </td>
+                          <td className="py-2 px-3 text-center">
+                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                              item.forecast_confidence === 'NORMAL'
+                                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300'
+                                : item.forecast_confidence === 'LIMITED'
+                                ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300'
+                                : 'bg-rose-100 text-rose-800 dark:bg-rose-950/80 dark:text-rose-300'
+                            }`}>
+                              {item.forecast_confidence}
+                            </span>
                           </td>
                           <td className="py-2 px-3 text-right">
                             {item.current_stock === 0 ? (
@@ -859,12 +983,16 @@ export const PromoDistributionPage: React.FC = () => {
                           <td className="py-2 px-3 text-right text-slate-400">{item.excess_units_from_rounding}</td>
                           <td className="py-2 px-3 text-center">
                             <span 
-                              title={item.warning_message || item.warning_status}
+                              title={item.warning_reason || item.warning_message || item.warning_status}
                               className={`px-2 py-0.5 rounded-full text-[10px] font-bold inline-block cursor-help ${
                                 item.warning_status === 'OK'
                                   ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
                                   : item.warning_status === 'FALLBACK_NETWORK_AVG'
                                   ? 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
+                                  : item.warning_status === 'ZERO_CURRENT_SALES_YOY_FALLBACK'
+                                  ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
+                                  : item.warning_status === 'DOUBLE_PROMO_RISK'
+                                  ? 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300'
                                   : item.warning_status === 'SUPPLIER_BLOCKED'
                                   ? 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300'
                                   : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'

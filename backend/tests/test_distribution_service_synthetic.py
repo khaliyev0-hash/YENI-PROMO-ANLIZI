@@ -179,10 +179,11 @@ def test_stockout_correction_and_uplift_workflow():
             promo_uplift_pct=30.0
         )
 
-        assert called_kwargs.get("stockout_correction") is True
-        assert called_kwargs.get("promo_uplift_pct") == 30.0
+        assert called_kwargs.get("stockout_correction") is False
+        assert res["orders"][0]["forecast_demand"] == 33.8  # 26.0 * 1.30 uplift
         assert res["summary"]["promo_uplift_pct"] == 30.0
-        assert res["summary"]["stockout_correction"] is True
+        assert res["summary"]["stockout_correction"] is False
+        assert res["summary"]["stockout_correction_applied"] is False
         assert "+30%" in res["parameters"]["Promo Uplift Artım Faizi"]
-        assert "Aktiv" in res["parameters"]["Stok-out Düzəlişi (Aktiv Satış Günləri)"]
+        assert "Deaktiv" in res["parameters"]["Stok-out Düzəlişi"]
 

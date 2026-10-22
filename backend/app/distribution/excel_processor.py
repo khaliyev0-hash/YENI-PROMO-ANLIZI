@@ -279,12 +279,18 @@ def generate_distribution_6sheet_excel(
     ws1.cell(row=1, column=1).font = Font(name="Calibri", size=16, bold=True, color="1E3A8A")
     ws1.append([])
 
+    conf_summary = summary_data.get("confidence_summary", {})
+    conf_str = f"NORMAL: {conf_summary.get('NORMAL', 0)} | LIMITED: {conf_summary.get('LIMITED', 0)} | MANUAL_REVIEW: {conf_summary.get('MANUAL_REVIEW', 0)}"
+
     kpis = [
         ("Kampaniya Başlanğıc Tarixi", summary_data.get("start_date")),
         ("Kampaniya Bitiş Tarixi", summary_data.get("end_date")),
         ("Kampaniya Müddəti (Gün)", summary_data.get("duration_days")),
         ("Promo Uplift Artımı (%)", f"+{summary_data.get('promo_uplift_pct', 0)}%"),
-        ("Stok-out Düzəlişi", "Aktiv (Aktiv satış günləri)" if summary_data.get("stockout_correction", True) else "Deaktiv"),
+        ("Stok-out Düzəlişi", "Deaktiv (Tarixi stok məlumatı olmadığı üçün təhlükəsiz proqnoz: 30 təqvim gününə bölünmə)"),
+        ("Tarixi Stok Mövcudluğu", "Yoxdur (Yalnız cari anbar qalığı mövcuddur)"),
+        ("Keçən İlin Eyni Dövrü (YoY)", f"Aktiv ({int(summary_data.get('yoy_weight', 0.3)*100)}% çəki, {summary_data.get('yoy_years_back', 1)} il əvvəl)" if summary_data.get("include_yoy_history", True) else "Deaktiv"),
+        ("Proqnoz Dərəcələri (Confidence)", conf_str),
         ("Mağaza Sayı", summary_data.get("store_count")),
         ("Məhsul Sayı", summary_data.get("product_count")),
         ("Ümumi Proqnoz Tələbat (Ədəd)", summary_data.get("total_forecast_demand")),
@@ -301,7 +307,7 @@ def generate_distribution_6sheet_excel(
         ws1.append([label, val])
 
     ws1.column_dimensions['A'].width = 38
-    ws1.column_dimensions['B'].width = 28
+    ws1.column_dimensions['B'].width = 35
     for r_idx in range(3, 3 + len(kpis)):
         ws1.cell(row=r_idx, column=1).font = Font(name="Calibri", size=11, bold=True)
         ws1.cell(row=r_idx, column=1).fill = PatternFill(start_color="F1F5F9", end_color="F1F5F9", fill_type="solid")
@@ -314,10 +320,14 @@ def generate_distribution_6sheet_excel(
     s2_cols = [
         "StoreCode", "StoreName", "ProductCode", "ProductName",
         "PromotionStartDate", "PromotionEndDate", "DurationDays",
-        "ForecastDemand", "CurrentStock", "IncomingStock", "TargetEndingStock",
+        "RecentTrendDemand", "YoYHistoricalSales", "YoYPromoSales",
+        "ForecastDemand", "ForecastMethod", "ForecastConfidence",
+        "StockoutCorrectionApplied", "StockoutHistoryAvailable", "YoYDataAvailable",
+        "PromoUpliftSource",
+        "CurrentStock", "IncomingStock", "TargetEndingStock",
         "ShelfCapacity", "NetRequirement", "RecommendedOrderUnits",
         "CaseQuantity", "RecommendedCases", "BlockQuantity", "RecommendedBlocks",
-        "ExpectedEndingStock", "ExcessUnitsFromRounding", "WarningStatus"
+        "ExpectedEndingStock", "ExcessUnitsFromRounding", "WarningStatus", "WarningReason"
     ]
     ws2.append(s2_cols)
     for c_idx in range(1, len(s2_cols) + 1):
@@ -335,7 +345,16 @@ def generate_distribution_6sheet_excel(
             str(o.get("start_date") or ""),
             str(o.get("end_date") or ""),
             o.get("duration_days"),
+            o.get("recent_trend_demand"),
+            o.get("yoy_historical_sales"),
+            o.get("yoy_promo_sales"),
             o.get("forecast_demand"),
+            str(o.get("forecast_method") or "CURRENT_TREND_ONLY"),
+            str(o.get("forecast_confidence") or "NORMAL"),
+            bool(o.get("stockout_correction_applied", False)),
+            bool(o.get("stockout_history_available", False)),
+            bool(o.get("yoy_data_available", False)),
+            str(o.get("promo_uplift_source") or "NONE"),
             o.get("current_stock"),
             o.get("eligible_incoming_stock"),
             o.get("target_ending_stock"),
@@ -348,7 +367,8 @@ def generate_distribution_6sheet_excel(
             o.get("recommended_blocks"),
             o.get("expected_ending_stock"),
             o.get("excess_units_from_rounding"),
-            str(o.get("warning_status") or "OK")
+            str(o.get("warning_status") or "OK"),
+            str(o.get("warning_reason") or o.get("warning_message") or "")
         ])
 
     for col in ws2.columns:
