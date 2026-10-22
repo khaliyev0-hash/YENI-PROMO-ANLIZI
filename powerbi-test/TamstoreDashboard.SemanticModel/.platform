@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "TamstoreDashboard"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "f988ff38-4603-46c9-a6a4-8928be6c4fa8"
+  }
+}

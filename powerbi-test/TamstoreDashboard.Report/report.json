@@ -1,0 +1,83 @@
+{
+  "config": "{\"version\":\"5.66\",\"themeCollection\":{\"baseTheme\":{\"name\":\"CY24SU06\",\"type\":2,\"version\":{\"visual\":\"1.8.80\",\"report\":\"2.0.80\",\"page\":\"1.3.80\"}}},\"activeSectionIndex\":0,\"linguisticSchemaSyncVersion\":2}",
+  "layoutOptimization": 0,
+  "sections": [
+    {
+      "config": "{}",
+      "displayName": "Executive Dashboard",
+      "displayOption": 0,
+      "filters": "[]",
+      "height": 1080.00,
+      "name": "ReportSection1",
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"bar_chart_store_performance\",\"layouts\":[{\"id\":0,\"position\":{\"x\":30,\"y\":170,\"z\":6000,\"width\":910,\"height\":450}}],\"singleVisual\":{\"visualType\":\"barChart\"}}",
+          "height": 450.00,
+          "width": 910.00,
+          "x": 30.00,
+          "y": 170.00,
+          "z": 6000.00
+        },
+        {
+          "config": "{\"name\":\"kpi_card_ach\",\"layouts\":[{\"id\":0,\"position\":{\"x\":630,\"y\":20,\"z\":2000,\"width\":280,\"height\":130}}],\"singleVisual\":{\"visualType\":\"card\"}}",
+          "height": 130.00,
+          "width": 280.00,
+          "x": 630.00,
+          "y": 20.00,
+          "z": 2000.00
+        },
+        {
+          "config": "{\"name\":\"kpi_card_bias\",\"layouts\":[{\"id\":0,\"position\":{\"x\":1530,\"y\":20,\"z\":5000,\"width\":360,\"height\":130}}],\"singleVisual\":{\"visualType\":\"card\"}}",
+          "height": 130.00,
+          "width": 360.00,
+          "x": 1530.00,
+          "y": 20.00,
+          "z": 5000.00
+        },
+        {
+          "config": "{\"name\":\"kpi_card_fc\",\"layouts\":[{\"id\":0,\"position\":{\"x\":30.87488902661686,\"y\":20.59650548557497,\"z\":0,\"width\":298.45726059062963,\"height\":149.79276716781794}}],\"singleVisual\":{\"visualType\":\"card\"}}",
+          "filters": "[]",
+          "height": 149.79,
+          "width": 298.46,
+          "x": 30.87,
+          "y": 20.60,
+          "z": 0.00
+        },
+        {
+          "config": "{\"name\":\"kpi_card_sale\",\"layouts\":[{\"id\":0,\"position\":{\"x\":330,\"y\":20,\"z\":1000,\"width\":280,\"height\":130}}],\"singleVisual\":{\"visualType\":\"card\"}}",
+          "height": 130.00,
+          "width": 280.00,
+          "x": 330.00,
+          "y": 20.00,
+          "z": 1000.00
+        },
+        {
+          "config": "{\"name\":\"kpi_card_stockout\",\"layouts\":[{\"id\":0,\"position\":{\"x\":930,\"y\":20,\"z\":3000,\"width\":280,\"height\":130}}],\"singleVisual\":{\"visualType\":\"card\"}}",
+          "height": 130.00,
+          "width": 280.00,
+          "x": 930.00,
+          "y": 20.00,
+          "z": 3000.00
+        },
+        {
+          "config": "{\"name\":\"kpi_card_wape\",\"layouts\":[{\"id\":0,\"position\":{\"x\":1230,\"y\":20,\"z\":4000,\"width\":280,\"height\":130}}],\"singleVisual\":{\"visualType\":\"card\"}}",
+          "height": 130.00,
+          "width": 280.00,
+          "x": 1230.00,
+          "y": 20.00,
+          "z": 4000.00
+        },
+        {
+          "config": "{\"name\":\"table_product_performance\",\"layouts\":[{\"id\":0,\"position\":{\"x\":889.1968039665655,\"y\":254.6477041852905,\"z\":7000,\"width\":930.3633226687214,\"height\":449.3783015034539}}],\"singleVisual\":{\"visualType\":\"tableEx\"}}",
+          "filters": "[]",
+          "height": 449.38,
+          "width": 930.36,
+          "x": 889.20,
+          "y": 254.65,
+          "z": 7000.00
+        }
+      ],
+      "width": 1920.00
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+table PromoFact
+	lineageTag: a1111111-1111-1111-1111-111111111111
+
+	column STORE
+		dataType: string
+		lineageTag: a1111111-1111-1111-1111-111111111112
+		summarizeBy: none
+		sourceColumn: STORE
+
+	column CODE
+		dataType: string
+		lineageTag: a1111111-1111-1111-1111-111111111113
+		summarizeBy: none
+		sourceColumn: CODE
+
+	column SALE_DATE
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: a1111111-1111-1111-1111-111111111114
+		summarizeBy: none
+		sourceColumn: SALE_DATE
+
+		variation Variation
+			isDefault
+			relationship: 3e77811a-cd05-4dfa-9804-fe27b15e76d2
+			defaultHierarchy: LocalDateTable_73eaa5ff-934b-44d3-bb93-362125e86655.'Date Hierarchy'
+
+	column SALE
+		dataType: double
+		formatString: #,0.00
+		lineageTag: a1111111-1111-1111-1111-111111111115
+		summarizeBy: sum
+		sourceColumn: SALE
+
+	column FC
+		dataType: double
+		formatString: #,0.00
+		lineageTag: a1111111-1111-1111-1111-111111111116
+		summarizeBy: sum
+		sourceColumn: FC
+
+	partition PromoFact = m
+		mode: import
+		source =
+				let
+				    SqlQuery = "SELECT CAST([TARIX] AS DATETIME) AS SALE_DATE, CAST([MAGAZA] AS VARCHAR(50)) AS STORE, LTRIM(RTRIM(CAST([MEHSUL_KODU] AS VARCHAR(50)))) AS CODE, SUM(ISNULL([MIQDARI], 0)) AS SALE, 0.0 AS FC FROM fnc_TS_SALES_REPORT_FOR_PLANNING('" & PromoStartDate & "', '" & PromoEndDate & "') GROUP BY [TARIX], CAST([MAGAZA] AS VARCHAR(50)), LTRIM(RTRIM(CAST([MEHSUL_KODU] AS VARCHAR(50))))",
+				    Source = Sql.Database(ServerName, DatabaseName, [Query=SqlQuery])
+				in
+				    Source
+

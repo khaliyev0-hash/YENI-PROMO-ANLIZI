@@ -1,0 +1,42 @@
+table ItemMaster
+	lineageTag: b1111111-1111-1111-1111-111111111111
+
+	column CODE
+		dataType: string
+		lineageTag: b1111111-1111-1111-1111-111111111113
+		summarizeBy: none
+		sourceColumn: CODE
+
+	column NAME
+		dataType: string
+		lineageTag: b1111111-1111-1111-1111-111111111114
+		summarizeBy: none
+		sourceColumn: NAME
+
+	column FAMILY_NAME
+		dataType: string
+		lineageTag: b1111111-1111-1111-1111-111111111115
+		summarizeBy: none
+		sourceColumn: FAMILY_NAME
+
+	column CATEGORY_NAME
+		dataType: string
+		lineageTag: b1111111-1111-1111-1111-111111111116
+		summarizeBy: none
+		sourceColumn: CATEGORY_NAME
+
+	column SUPPLIER_NAME
+		dataType: string
+		lineageTag: b1111111-1111-1111-1111-111111111117
+		summarizeBy: none
+		sourceColumn: SUPPLIER_NAME
+
+	partition ItemMaster = m
+		mode: import
+		source =
+				let
+				    SqlQuery = "WITH DedupItems AS (SELECT LTRIM(RTRIM(CAST([URUN KODU] AS VARCHAR(50)))) AS CODE, [URUN AD] AS NAME, [FAMILY NAME] AS FAMILY_NAME, [CATEGORY NAME] AS CATEGORY_NAME, [SATICI ADI] AS SUPPLIER_NAME, ROW_NUMBER() OVER (PARTITION BY LTRIM(RTRIM(CAST([URUN KODU] AS VARCHAR(50)))) ORDER BY CASE WHEN [TEDARİKCİ BLOKAJİ] LIKE 'XEYR%' THEN 0 ELSE 1 END, [ALIS ILK TARIX] DESC) AS rn FROM vw_TS_ITEMS_DETAIL_FOR_PLANNING) SELECT CODE, NAME, FAMILY_NAME, CATEGORY_NAME, SUPPLIER_NAME FROM DedupItems WHERE rn = 1",
+				    Source = Sql.Database(ServerName, DatabaseName, [Query=SqlQuery])
+				in
+				    Source
+

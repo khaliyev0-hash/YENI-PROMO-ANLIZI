@@ -1,0 +1,21 @@
+relationship PromoFact_ItemMaster
+	fromColumn: PromoFact.CODE
+	toColumn: ItemMaster.CODE
+
+relationship StoreStock_ItemMaster
+	fromColumn: StoreStock.CODE
+	toColumn: ItemMaster.CODE
+
+relationship PromoFact_StoreMaster
+	fromColumn: PromoFact.STORE
+	toColumn: StoreMaster.STORE
+
+relationship StoreStock_StoreMaster
+	fromColumn: StoreStock.STORE
+	toColumn: StoreMaster.STORE
+
+relationship 3e77811a-cd05-4dfa-9804-fe27b15e76d2
+	joinOnDateBehavior: datePartOnly
+	fromColumn: PromoFact.SALE_DATE
+	toColumn: LocalDateTable_73eaa5ff-934b-44d3-bb93-362125e86655.Date
+

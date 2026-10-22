@@ -1,0 +1,658 @@
+@import "tailwindcss";
+
+html {
+  zoom: 80%;
+  width: 100%;
+  height: calc(100vh / 0.8);
+  min-height: calc(100vh / 0.8);
+  background-color: #f8fafc;
+}
+
+body, #root {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #f8fafc;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 font-sans antialiased selection:bg-blue-600 selection:text-white;
+  }
+}
+
+/* Custom Light Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Premium Soft & Deep Corporate Ambient Shadow Utility with Dynamic 3D Elevation */
+.card-hover {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+  box-shadow: 0 4px 18px -2px rgba(15, 23, 42, 0.05), 0 1px 3px 0 rgba(15, 23, 42, 0.02);
+}
+.card-hover:hover {
+  transform: translateY(-3.5px);
+  box-shadow: 0 18px 36px -8px rgba(15, 23, 42, 0.09), 0 8px 18px -4px rgba(20, 121, 232, 0.10);
+  border-color: rgba(20, 121, 232, 0.35);
+}
+
+/* Sidebar Ambient Shadow & Dynamic Blue Edge Glow */
+.sidebar-glow {
+  box-shadow: 8px 0 32px -6px rgba(20, 121, 232, 0.08), 3px 0 10px -2px rgba(15, 23, 42, 0.03);
+}
+
+/* Multi-layered Soft Ambient Panel Shadows */
+.soft-panel-shadow {
+  box-shadow: 0 8px 30px -4px rgba(15, 23, 42, 0.05), 0 2px 8px -2px rgba(15, 23, 42, 0.02);
+}
+
+/* Color Accent Card Classes with Multi-Layered Soft Ambient & Hover Glow */
+.card-accent-amber {
+  border-color: rgba(245, 158, 11, 0.22);
+  box-shadow: 0 6px 22px -3px rgba(245, 158, 11, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+}
+.card-accent-amber:hover {
+  border-color: rgba(245, 158, 11, 0.55);
+  box-shadow: 0 18px 36px -6px rgba(245, 158, 11, 0.18), 0 8px 18px -4px rgba(15, 23, 42, 0.05);
+}
+
+.card-accent-emerald {
+  border-color: rgba(16, 185, 129, 0.22);
+  box-shadow: 0 6px 22px -3px rgba(16, 185, 129, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+}
+.card-accent-emerald:hover {
+  border-color: rgba(16, 185, 129, 0.55);
+  box-shadow: 0 18px 36px -6px rgba(16, 185, 129, 0.18), 0 8px 18px -4px rgba(15, 23, 42, 0.05);
+}
+
+.card-accent-rose {
+  border-color: rgba(244, 63, 94, 0.22);
+  box-shadow: 0 6px 22px -3px rgba(244, 63, 94, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+}
+.card-accent-rose:hover {
+  border-color: rgba(244, 63, 94, 0.55);
+  box-shadow: 0 18px 36px -6px rgba(244, 63, 94, 0.18), 0 8px 18px -4px rgba(15, 23, 42, 0.05);
+}
+
+.card-accent-blue {
+  border-color: rgba(20, 121, 232, 0.22);
+  box-shadow: 0 6px 22px -3px rgba(20, 121, 232, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+}
+.card-accent-blue:hover {
+  border-color: rgba(20, 121, 232, 0.55);
+  box-shadow: 0 18px 36px -6px rgba(20, 121, 232, 0.18), 0 8px 18px -4px rgba(15, 23, 42, 0.05);
+}
+
+.card-accent-purple {
+  border-color: rgba(168, 85, 247, 0.22);
+  box-shadow: 0 6px 22px -3px rgba(168, 85, 247, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+}
+.card-accent-purple:hover {
+  border-color: rgba(168, 85, 247, 0.55);
+  box-shadow: 0 18px 36px -6px rgba(168, 85, 247, 0.18), 0 8px 18px -4px rgba(15, 23, 42, 0.05);
+}
+
+/* Glass Card Accent & Micro-Interactions */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 32px -4px rgba(15, 23, 42, 0.06);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05), 0 4px 12px -2px rgba(15, 23, 42, 0.02);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(20, 121, 232, 0.4);
+  box-shadow: 0 20px 40px -10px rgba(20, 121, 232, 0.12), 0 8px 16px -4px rgba(15, 23, 42, 0.04);
+}
+
+/* Continuous Marquee Ticker */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* ==========================================================================
+   TASK 1 - Logo Animations (Fade-in + Scale, Hover Wiggle & Soft Glow)
+   ========================================================================== */
+@keyframes logoFadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes logoWiggleHover {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-3.5deg) scale(1.05); }
+  75% { transform: rotate(3.5deg) scale(1.05); }
+}
+
+.animate-logo-entrance {
+  animation: logoFadeInScale 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.logo-container-interactive {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.logo-container-interactive:hover {
+  animation: logoWiggleHover 0.45s ease-in-out;
+  box-shadow: 0 0 22px rgba(20, 121, 232, 0.45), 0 4px 14px rgba(20, 121, 232, 0.3);
+}
+
+/* ==========================================================================
+   TASK 2 - Staggered KPI Card Entrance
+   ========================================================================== */
+@keyframes cardSlideUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-card-stagger {
+  opacity: 0;
+  animation: cardSlideUpFade 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ==========================================================================
+   TASK 4 - Quick Filter Chip & Interactive Hover Effects
+   ========================================================================== */
+.chip-hover-effect {
+  transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.chip-hover-effect:hover {
+  transform: scale(1.03);
+}
+
+.chip-hover-effect:active {
+  transform: scale(0.97);
+}
+
+/* ==========================================================================
+   TASK 5 - System Clock Tick Pulse Flash
+   ========================================================================== */
+@keyframes clockTickPulse {
+  0% { opacity: 0.75; transform: scale(0.98); }
+  50% { opacity: 1; transform: scale(1.02); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.animate-clock-tick {
+  animation: clockTickPulse 0.35s ease-out;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes sparkleBurst1 { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(-22px, -22px) scale(0); opacity: 0; } }
+@keyframes sparkleBurst2 { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(22px, -22px) scale(0); opacity: 0; } }
+@keyframes sparkleBurst3 { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(-26px, 6px) scale(0); opacity: 0; } }
+@keyframes sparkleBurst4 { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(26px, 6px) scale(0); opacity: 0; } }
+@keyframes sparkleBurst5 { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(0px, -28px) scale(0); opacity: 0; } }
+@keyframes sparkleBurst6 { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(0px, 24px) scale(0); opacity: 0; } }
+
+/* Blue Neon Glow Style */
+.blue-neon-text {
+  color: #38bdf8;
+  font-weight: 900;
+  text-shadow: 0 0 4px #38bdf8, 0 0 8px #2563eb, 0 0 14px #1d4ed8;
+}
+
+/* 3D Moving Shimmer Animation for Progress Bar */
+@keyframes barShimmer3D {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+
+.animate-bar-shimmer-3d {
+  animation: barShimmer3D 2.2s infinite ease-in-out;
+}
+
+/* Futuristic 3D Plasma Stripe Movement & Glow */
+@keyframes stripeMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 36px 0; }
+}
+
+.animate-stripe-move {
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.35) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.35) 50%,
+    rgba(255, 255, 255, 0.35) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 24px 24px;
+  animation: stripeMove 1.2s linear infinite;
+}
+
+@keyframes laserPulseGlow {
+  0%, 100% { box-shadow: 0 0 8px rgba(56, 189, 248, 0.6), 0 0 16px rgba(37, 99, 235, 0.4); }
+  50% { box-shadow: 0 0 16px rgba(56, 189, 248, 0.9), 0 0 28px rgba(16, 185, 129, 0.7); }
+}
+
+.animate-laser-glow {
+  animation: laserPulseGlow 2s infinite ease-in-out;
+}
+
+/* Dashed Sine-Wave Continuous Flow Animation */
+@keyframes waveFlow {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -32; }
+}
+
+.animate-wave-flow {
+  animation: waveFlow 1.6s linear infinite;
+}
+
+/* Floating Twinkle Animation for Sparkle Stars */
+@keyframes floatTwinkle {
+  0%, 100% { transform: translateY(0px) scale(1); opacity: 0.75; }
+  50% { transform: translateY(-2.5px) scale(1.3); opacity: 1; filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.8)); }
+}
+
+.animate-float-twinkle {
+  animation: floatTwinkle 2.2s infinite ease-in-out;
+}
+
+/* Continuous Electric Stream Flow Animation for Chart Lines */
+@keyframes lineStrokeFlow {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -32; }
+}
+
+.animate-line-stroke-flow {
+  animation: lineStrokeFlow 1.2s linear infinite !important;
+}
+
+@keyframes lineGlowPulse {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(20, 121, 232, 0.7)); }
+  50% { filter: drop-shadow(0 0 12px rgba(59, 130, 246, 0.95)) drop-shadow(0 0 20px rgba(16, 185, 129, 0.6)); }
+}
+
+.animate-line-glow-pulse {
+  animation: lineGlowPulse 2.5s infinite ease-in-out !important;
+}
+
+/* Blue Blink / Pulse Animation */
+@keyframes blueBlink {
+  0%, 100% {
+    opacity: 1;
+    color: #2563eb;
+    filter: drop-shadow(0 0 6px rgba(37, 99, 235, 0.6));
+  }
+  50% {
+    opacity: 0.35;
+    color: #1d4ed8;
+    filter: drop-shadow(0 0 1px rgba(37, 99, 235, 0.2));
+  }
+}
+
+.animate-blue-blink {
+  animation: blueBlink 1.4s ease-in-out infinite;
+}
+
+/* ========================================================
+   🌙 MIDNIGHT EXECUTIVE DARK THEME
+   Deep Slate Palette with Luminous Accents & Crisp Contrast
+   ======================================================== */
+html.dark {
+  background-color: #0b0f19 !important;
+  color-scheme: dark;
+}
+
+html.dark body,
+html.dark #root {
+  background-color: #0b0f19 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Base Surfaces in Dark Mode */
+html.dark .bg-white,
+html.dark .bg-white\/90,
+html.dark .bg-white\/95,
+html.dark .bg-white\/80 {
+  background-color: #111827 !important;
+}
+
+html.dark .bg-slate-50,
+html.dark .bg-slate-50\/60,
+html.dark .bg-slate-50\/70,
+html.dark .bg-slate-50\/80,
+html.dark .bg-slate-50\/90 {
+  background-color: #0b0f19 !important;
+}
+
+html.dark .bg-slate-100,
+html.dark .bg-slate-100\/60,
+html.dark .bg-slate-100\/70,
+html.dark .bg-slate-100\/80 {
+  background-color: #1a2234 !important;
+}
+
+html.dark .bg-slate-200,
+html.dark .bg-slate-200\/60,
+html.dark .bg-slate-200\/80 {
+  background-color: #242f47 !important;
+}
+
+/* Borders in Dark Mode */
+html.dark .border-slate-100,
+html.dark .border-slate-200,
+html.dark .border-slate-200\/50,
+html.dark .border-slate-200\/60,
+html.dark .border-slate-200\/80,
+html.dark .border-slate-300,
+html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+html.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #1e293b !important;
+}
+
+/* Typography Overrides in Dark Mode */
+html.dark .text-slate-900 {
+  color: #f8fafc !important;
+}
+html.dark .text-slate-800 {
+  color: #f1f5f9 !important;
+}
+html.dark .text-slate-700 {
+  color: #e2e8f0 !important;
+}
+html.dark .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+html.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+html.dark .text-slate-400 {
+  color: #64748b !important;
+}
+
+/* Table Enhancements in Dark Mode */
+html.dark table thead {
+  background-color: #162032 !important;
+}
+html.dark table thead th {
+  color: #94a3b8 !important;
+  border-color: #1e293b !important;
+}
+html.dark tbody tr:hover,
+html.dark tr.hover\:bg-blue-50:hover {
+  background-color: rgba(30, 41, 59, 0.75) !important;
+}
+
+/* Dark Mode Form Inputs & Selects */
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background-color: #161f30 !important;
+  color: #f8fafc !important;
+  border-color: #27354f !important;
+}
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* Dark Mode Cards & Ambient Hover */
+html.dark .card-hover {
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4), 0 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+html.dark .card-hover:hover {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6), 0 0 16px rgba(59, 130, 246, 0.25);
+  border-color: rgba(59, 130, 246, 0.4) !important;
+}
+
+/* Dark Scrollbars */
+html.dark ::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #242f47;
+  border-radius: 4px;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #3b4d6e;
+}
+
+/* ==========================================================================
+   Neon Glows, Breathing Pulses & Glassmorphic Highlights
+   ========================================================================== */
+
+@keyframes pulse-glow-emerald {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.35), inset 0 0 4px rgba(16, 185, 129, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(16, 185, 129, 0.7), inset 0 0 8px rgba(16, 185, 129, 0.35);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes pulse-glow-rose {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(244, 63, 94, 0.35), inset 0 0 4px rgba(244, 63, 94, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(244, 63, 94, 0.75), inset 0 0 8px rgba(244, 63, 94, 0.4);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes pulse-glow-amber {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.35), inset 0 0 4px rgba(245, 158, 11, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(245, 158, 11, 0.7), inset 0 0 8px rgba(245, 158, 11, 0.35);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes pulse-glow-blue {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.35), inset 0 0 4px rgba(59, 130, 246, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(59, 130, 246, 0.7), inset 0 0 8px rgba(59, 130, 246, 0.35);
+    transform: scale(1.02);
+  }
+}
+
+.neon-pulse-emerald {
+  animation: pulse-glow-emerald 2.4s ease-in-out infinite;
+}
+
+.neon-pulse-rose {
+  animation: pulse-glow-rose 2s ease-in-out infinite;
+}
+
+.neon-pulse-amber {
+  animation: pulse-glow-amber 2.4s ease-in-out infinite;
+}
+
+.neon-pulse-blue {
+  animation: pulse-glow-blue 2.4s ease-in-out infinite;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+html.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ==========================================================================
+   Thin Delicate Luminous Lines & Glowing Borders (Zərif İşıqlı Cizgilər)
+   ========================================================================== */
+
+.luminous-border-amber {
+  border-color: rgba(245, 158, 11, 0.42) !important;
+  box-shadow: 0 0 12px -2px rgba(245, 158, 11, 0.22), inset 0 0 8px -2px rgba(245, 158, 11, 0.08);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.luminous-border-amber:hover {
+  border-color: rgba(245, 158, 11, 0.75) !important;
+  box-shadow: 0 0 20px 0px rgba(245, 158, 11, 0.38), inset 0 0 12px 0px rgba(245, 158, 11, 0.15);
+}
+
+.luminous-border-blue {
+  border-color: rgba(59, 130, 246, 0.42) !important;
+  box-shadow: 0 0 12px -2px rgba(59, 130, 246, 0.22), inset 0 0 8px -2px rgba(59, 130, 246, 0.08);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.luminous-border-blue:hover {
+  border-color: rgba(59, 130, 246, 0.75) !important;
+  box-shadow: 0 0 20px 0px rgba(59, 130, 246, 0.38), inset 0 0 12px 0px rgba(59, 130, 246, 0.15);
+}
+
+.luminous-border-cyan {
+  border-color: rgba(6, 182, 212, 0.42) !important;
+  box-shadow: 0 0 12px -2px rgba(6, 182, 212, 0.22), inset 0 0 8px -2px rgba(6, 182, 212, 0.08);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.luminous-border-cyan:hover {
+  border-color: rgba(6, 182, 212, 0.75) !important;
+  box-shadow: 0 0 20px 0px rgba(6, 182, 212, 0.38), inset 0 0 12px 0px rgba(6, 182, 212, 0.15);
+}
+
+.luminous-border-emerald {
+  border-color: rgba(16, 185, 129, 0.42) !important;
+  box-shadow: 0 0 12px -2px rgba(16, 185, 129, 0.22), inset 0 0 8px -2px rgba(16, 185, 129, 0.08);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.luminous-border-emerald:hover {
+  border-color: rgba(16, 185, 129, 0.75) !important;
+  box-shadow: 0 0 20px 0px rgba(16, 185, 129, 0.38), inset 0 0 12px 0px rgba(16, 185, 129, 0.15);
+}
+
+/* Delicate luminous line across top or bottom rim */
+.luminous-line-amber {
+  background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.75), rgba(251, 191, 36, 0.9), rgba(245, 158, 11, 0.75), transparent);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.45);
+}
+
+.luminous-line-blue {
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.75), rgba(96, 165, 250, 0.9), rgba(59, 130, 246, 0.75), transparent);
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.45);
+}
+
+/* Subtle glowing cell chip */
+.luminous-cell-amber {
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  background: rgba(245, 158, 11, 0.08);
+  box-shadow: 0 0 8px -1px rgba(245, 158, 11, 0.22);
+}
+
+.luminous-cell-blue {
+  border: 1px solid rgba(59, 130, 246, 0.45);
+  background: rgba(59, 130, 246, 0.08);
+  box-shadow: 0 0 8px -1px rgba(59, 130, 246, 0.22);
+}
+
+/* ==========================================================================
+   Filter Bar Luminous Lines & Glowing Pills
+   ========================================================================== */
+
+.filter-pill-glow {
+  border: 1px solid rgba(59, 130, 246, 0.35) !important;
+  box-shadow: 0 0 8px -2px rgba(59, 130, 246, 0.16), inset 0 0 4px -1px rgba(59, 130, 246, 0.05);
+  transition: all 0.22s ease-in-out;
+}
+.filter-pill-glow:hover, .filter-pill-glow:focus {
+  border-color: rgba(59, 130, 246, 0.75) !important;
+  box-shadow: 0 0 14px 0px rgba(59, 130, 246, 0.32), inset 0 0 6px 0px rgba(59, 130, 246, 0.12);
+}
+html.dark .filter-pill-glow {
+  border: 1px solid rgba(59, 130, 246, 0.42) !important;
+  box-shadow: 0 0 10px -2px rgba(59, 130, 246, 0.25);
+}
+html.dark .filter-pill-glow:hover, html.dark .filter-pill-glow:focus {
+  border-color: rgba(96, 165, 250, 0.85) !important;
+  box-shadow: 0 0 16px 0px rgba(59, 130, 246, 0.45);
+}
+
+/* Active filtered pill glow (Golden / Amber when a value is selected) */
+.filter-pill-active {
+  border: 1px solid rgba(245, 158, 11, 0.65) !important;
+  background: rgba(245, 158, 11, 0.08) !important;
+  box-shadow: 0 0 12px 0px rgba(245, 158, 11, 0.28), inset 0 0 6px 0px rgba(245, 158, 11, 0.1);
+  color: #b45309 !important;
+}
+html.dark .filter-pill-active {
+  color: #fcd34d !important;
+  background: rgba(245, 158, 11, 0.15) !important;
+  border-color: rgba(245, 158, 11, 0.7) !important;
+}
+.filter-pill-active:hover, .filter-pill-active:focus {
+  border-color: rgba(245, 158, 11, 0.9) !important;
+  box-shadow: 0 0 18px 0px rgba(245, 158, 11, 0.45);
+}
+
+select.filter-pill-glow, select.filter-pill-active {
+  min-height: 32px;
+  line-height: 1.25rem;
+}
+
+
+
+
+
+

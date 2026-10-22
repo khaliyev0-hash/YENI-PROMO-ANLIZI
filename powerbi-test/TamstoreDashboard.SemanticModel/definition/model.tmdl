@@ -1,0 +1,28 @@
+model Model
+	culture: az-Latn-AZ
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: az-Latn-AZ
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_TimeIntelligenceEnabled = 1
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBIDesktopVersion = 2.146.1454.0 (25.08)+901d6c338d1dea81ac3e53073ffb10469f0f37b8
+
+annotation PBI_QueryOrder = ["PromoFact","ItemMaster","StoreMaster","StoreStock","_Measures","ServerName","DatabaseName","PromoStartDate","PromoEndDate"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table PromoFact
+ref table ItemMaster
+ref table StoreMaster
+ref table StoreStock
+ref table _Measures
+ref table DateTableTemplate_2a085bda-4276-4cab-9aff-f37b45b14b4f
+ref table LocalDateTable_73eaa5ff-934b-44d3-bb93-362125e86655
+
+ref cultureInfo az-Latn-AZ
+

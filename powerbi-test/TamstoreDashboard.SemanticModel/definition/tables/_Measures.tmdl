@@ -1,0 +1,63 @@
+table _Measures
+	lineageTag: d1111111-1111-1111-1111-111111111111
+
+	measure 'Total Forecast' = SUM(PromoFact[FC])
+		formatString: #,0.00
+		lineageTag: d1111111-1111-1111-1111-111111111112
+
+	measure 'Total Sale' = SUM(PromoFact[SALE])
+		formatString: #,0.00
+		lineageTag: d1111111-1111-1111-1111-111111111113
+
+	measure 'Achievement %' = DIVIDE([Total Sale], [Total Forecast], 0) * 100
+		formatString: 0.00"%"
+		lineageTag: d1111111-1111-1111-1111-111111111114
+
+	measure 'Total Stock' = SUM(StoreStock[STOCK_QTY])
+		formatString: #,0.00
+		lineageTag: d1111111-1111-1111-1111-111111111115
+
+	measure 'Sell Through %' = DIVIDE([Total Sale], [Total Sale] + [Total Stock], 0) * 100
+		formatString: 0.00"%"
+		lineageTag: d1111111-1111-1111-1111-111111111116
+
+	measure 'Stockout Count' = CALCULATE(COUNTROWS(PromoFact), StoreStock[STOCK_QTY] <= 0)
+		formatString: #,0
+		lineageTag: d1111111-1111-1111-1111-111111111117
+
+	measure 'Stockout Rate %' = DIVIDE([Stockout Count], COUNTROWS(PromoFact), 0) * 100
+		formatString: 0.00"%"
+		lineageTag: d1111111-1111-1111-1111-111111111118
+
+	measure 'WAPE %' = DIVIDE(SUMX(PromoFact, ABS(PromoFact[SALE] - PromoFact[FC])), [Total Forecast], 0) * 100
+		formatString: 0.00"%"
+		lineageTag: d1111111-1111-1111-1111-111111111119
+
+	measure MAE = AVERAGEX(PromoFact, ABS(PromoFact[SALE] - PromoFact[FC]))
+		formatString: #,0.00
+		lineageTag: d1111111-1111-1111-1111-111111111120
+
+	measure RMSE = SQRT(AVERAGEX(PromoFact, (PromoFact[SALE] - PromoFact[FC])^2))
+		formatString: #,0.00
+		lineageTag: d1111111-1111-1111-1111-111111111121
+
+	measure Bias = SUMX(PromoFact, PromoFact[SALE] - PromoFact[FC])
+		formatString: #,0.00
+		lineageTag: d1111111-1111-1111-1111-111111111122
+
+	column Placeholder
+		dataType: string
+		lineageTag: 8749bed0-9c23-4d9f-b076-925c3611c11c
+		summarizeBy: none
+		sourceColumn: Placeholder
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = #table({"Placeholder"}, {{"1"}})
+				in
+				    Source
+

@@ -1,0 +1,1193 @@
+{
+  "vw_TS_ITEMS_DETAIL_FOR_PLANNING": [
+    {
+      "name": "IS YERI NO",
+      "type": "varchar",
+      "len": 4,
+      "nullable": "YES"
+    },
+    {
+      "name": "URUN KODU",
+      "type": "varchar",
+      "len": 25,
+      "nullable": "YES"
+    },
+    {
+      "name": "URUN AD",
+      "type": "varchar",
+      "len": 303,
+      "nullable": "YES"
+    },
+    {
+      "name": "QRUP",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "FAMILY CODE",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "FAMILY NAME",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "SUB FAMILY CODE",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "SUB FAMILY NAME",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "CATEGORY CODE",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "CATEGORY NAME",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "SUB CATEGORY CODE",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "SUB CATEGORY NAME",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "SATICI",
+      "type": "varchar",
+      "len": 17,
+      "nullable": "YES"
+    },
+    {
+      "name": "SATICI ADI",
+      "type": "varchar",
+      "len": 201,
+      "nullable": "YES"
+    },
+    {
+      "name": "ESAS BARKOD",
+      "type": "varchar",
+      "len": 101,
+      "nullable": "YES"
+    },
+    {
+      "name": "ALTERNATİF BARKOD",
+      "type": "varchar",
+      "len": 101,
+      "nullable": "NO"
+    },
+    {
+      "name": "QUTU ICI",
+      "type": "float",
+      "len": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "BLOK ICI",
+      "type": "float",
+      "len": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "VAHIDI",
+      "type": "varchar",
+      "len": 51,
+      "nullable": "YES"
+    },
+    {
+      "name": "TEREZI KODU",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "YES"
+    },
+    {
+      "name": "SATIS QIYMETI",
+      "type": "float",
+      "len": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "SATIS QRUP KODU",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "SATIS QRUP ADI",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "SATIS EDV",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "NO"
+    },
+    {
+      "name": "VALYUTA SATIS",
+      "type": "varchar",
+      "len": 3,
+      "nullable": "NO"
+    },
+    {
+      "name": "ALIS QIYMETI",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "ALIS EDV",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "NO"
+    },
+    {
+      "name": "VALYUTA ALIS",
+      "type": "varchar",
+      "len": 6,
+      "nullable": "YES"
+    },
+    {
+      "name": "SATIS ILK TARIX",
+      "type": "date",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "SATIS SON TARIX",
+      "type": "date",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "ALIS ILK TARIX",
+      "type": "date",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "ALIS SON TARIX",
+      "type": "date",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "ALIS VERGİ GÖSTERGESİ",
+      "type": "varchar",
+      "len": 2,
+      "nullable": "NO"
+    },
+    {
+      "name": "SATIS VERGİ GÖSTERGESİ",
+      "type": "varchar",
+      "len": 11,
+      "nullable": "YES"
+    },
+    {
+      "name": "MARJ",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "ENDİRİM 1 %",
+      "type": "nvarchar",
+      "len": 12,
+      "nullable": "YES"
+    },
+    {
+      "name": "ENDİRİM 2 %",
+      "type": "nvarchar",
+      "len": 12,
+      "nullable": "YES"
+    },
+    {
+      "name": "ENDİRİM 3 %",
+      "type": "nvarchar",
+      "len": 12,
+      "nullable": "YES"
+    },
+    {
+      "name": "LOGISTIKA ENDIRIMI",
+      "type": "nvarchar",
+      "len": 12,
+      "nullable": "YES"
+    },
+    {
+      "name": "NITELIK",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "NO"
+    },
+    {
+      "name": "MARKA",
+      "type": "varchar",
+      "len": 25,
+      "nullable": "YES"
+    },
+    {
+      "name": "MARKA ADI",
+      "type": "varchar",
+      "len": 51,
+      "nullable": "YES"
+    },
+    {
+      "name": "SKT (GUN)",
+      "type": "varchar",
+      "len": 34,
+      "nullable": "YES"
+    },
+    {
+      "name": "NET AĞIR.",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "BRUT AĞIR.",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "UZUNLUK",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "GENİŞLİK",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "YÜKSEKLİK",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "IS YERI TEDARUK TIPI",
+      "type": "smallint",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "TEDARİKCİ BLOKAJİ",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "NO"
+    },
+    {
+      "name": "ISLETICI",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "NO"
+    },
+    {
+      "name": "ISLETICI FAIZI",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "SIFARISSIZ GIRIS",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "NO"
+    },
+    {
+      "name": "SIFARISE ACIQ",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "NO"
+    },
+    {
+      "name": "FIRMA IADEYE ACIQ",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "NO"
+    },
+    {
+      "name": "DEPO IADEYE ACIQ",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "NO"
+    },
+    {
+      "name": "SATISA BLOKLU",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "NO"
+    },
+    {
+      "name": "SICAKLIK KOSULU",
+      "type": "varchar",
+      "len": 11,
+      "nullable": "YES"
+    },
+    {
+      "name": "RAPOR GRUBU",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "GENEL BLOK",
+      "type": "varchar",
+      "len": 21,
+      "nullable": "NO"
+    },
+    {
+      "name": "ITEM_CREATED_DATE",
+      "type": "date",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "SARFA ACIQ",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "NO"
+    },
+    {
+      "name": "FIREYE ACIQ",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "NO"
+    },
+    {
+      "name": "Idxal",
+      "type": "varchar",
+      "len": 25,
+      "nullable": "YES"
+    }
+  ],
+  "vw_TS_ITEMS_DETAIL_MAGAZA_FOR_PLANNING": [
+    {
+      "name": "IS YERI NO",
+      "type": "varchar",
+      "len": 4,
+      "nullable": "YES"
+    },
+    {
+      "name": "URUN KODU",
+      "type": "varchar",
+      "len": 25,
+      "nullable": "YES"
+    },
+    {
+      "name": "URUN AD",
+      "type": "varchar",
+      "len": 303,
+      "nullable": "YES"
+    },
+    {
+      "name": "QRUP",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "FAMILY NAME",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "SUB FAMILY NAME",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "CATEGORY NAME",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "SUB CATEGORY NAME",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "SATICI",
+      "type": "varchar",
+      "len": 17,
+      "nullable": "YES"
+    },
+    {
+      "name": "SATICI ADI",
+      "type": "varchar",
+      "len": 201,
+      "nullable": "YES"
+    },
+    {
+      "name": "QUTU ICI",
+      "type": "float",
+      "len": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "BLOK ICI",
+      "type": "float",
+      "len": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "VAHIDI",
+      "type": "varchar",
+      "len": 51,
+      "nullable": "YES"
+    },
+    {
+      "name": "ESAS BARKOD",
+      "type": "varchar",
+      "len": 101,
+      "nullable": "YES"
+    },
+    {
+      "name": "ALTERNATİF BARKOD",
+      "type": "varchar",
+      "len": 101,
+      "nullable": "NO"
+    },
+    {
+      "name": "TEREZI KODU",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "YES"
+    },
+    {
+      "name": "SKT GUN",
+      "type": "varchar",
+      "len": 34,
+      "nullable": "YES"
+    },
+    {
+      "name": "IS YERI TEDARUK TIPI",
+      "type": "smallint",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "TEDARİKCİ BLOKAJİ",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "NO"
+    },
+    {
+      "name": "ISLETICI",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "NO"
+    },
+    {
+      "name": "SIFARISSIZ GIRIS",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "NO"
+    },
+    {
+      "name": "SIFARISE ACIQ",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "NO"
+    },
+    {
+      "name": "FIRMA IADEYE ACIQ",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "NO"
+    },
+    {
+      "name": "DEPO IADEYE ACIQ",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "NO"
+    },
+    {
+      "name": "SATISA BLOKLU",
+      "type": "varchar",
+      "len": 5,
+      "nullable": "NO"
+    },
+    {
+      "name": "GENEL BLOK",
+      "type": "varchar",
+      "len": 21,
+      "nullable": "NO"
+    },
+    {
+      "name": "Stok miqdari",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "Depo stoku",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "SIFARIS",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "INSERT_ADI",
+      "type": "varchar",
+      "len": 51,
+      "nullable": "YES"
+    },
+    {
+      "name": "INSERT_ILK_TARIX",
+      "type": "datetime",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "INSERT_SON_TARIX",
+      "type": "datetime",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "MAGAZA",
+      "type": "int",
+      "len": null,
+      "nullable": "YES"
+    }
+  ],
+  "VW_STOCK_ANALYSIS_DAILY_14DAYS": [
+    {
+      "name": "TarixGunu",
+      "type": "date",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "IsYeriKodu",
+      "type": "smallint",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "IsYeriAdi",
+      "type": "varchar",
+      "len": 61,
+      "nullable": "YES"
+    },
+    {
+      "name": "MehsulKodu",
+      "type": "varchar",
+      "len": 25,
+      "nullable": "YES"
+    },
+    {
+      "name": "MehsulAdi",
+      "type": "varchar",
+      "len": 51,
+      "nullable": "YES"
+    },
+    {
+      "name": "StokMiqdari",
+      "type": "float",
+      "len": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "StokTutari",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "FamilyName",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "SubFamilyName",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "CategoryName",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "SubCategoryName",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    }
+  ],
+  "VW_TS_DEPO_STOCK_ANALIZI": [
+    {
+      "name": "LOGICALREF",
+      "type": "int",
+      "len": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "CODE",
+      "type": "varchar",
+      "len": 25,
+      "nullable": "YES"
+    },
+    {
+      "name": "NAME",
+      "type": "varchar",
+      "len": 51,
+      "nullable": "YES"
+    },
+    {
+      "name": "SIFARISE_ACIQ",
+      "type": "varchar",
+      "len": 4,
+      "nullable": "NO"
+    },
+    {
+      "name": "GENEL_BLOK",
+      "type": "varchar",
+      "len": 4,
+      "nullable": "NO"
+    },
+    {
+      "name": "FAMILY_NAME",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "SUB_FAMILY_NAME",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "CATEGORY_NAME",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "SUB_CATEGORY_NAME",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "VAHIDI",
+      "type": "varchar",
+      "len": 51,
+      "nullable": "YES"
+    },
+    {
+      "name": "KL",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "BL",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "SATICI",
+      "type": "varchar",
+      "len": 17,
+      "nullable": "YES"
+    },
+    {
+      "name": "SATICI_ADI",
+      "type": "varchar",
+      "len": 201,
+      "nullable": "YES"
+    },
+    {
+      "name": "NITELIK",
+      "type": "varchar",
+      "len": 41,
+      "nullable": "YES"
+    },
+    {
+      "name": "DEPO_STOKU",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "DEPO_STOK_MEBLEGI",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "ACIQ_SIFARIS",
+      "type": "float",
+      "len": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "SON_SIFARIS_TARIXI",
+      "type": "datetime",
+      "len": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "TOPLAM_SATIS_MIQDARI",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "TOPLAM_SEVKIYYAT",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "SON_ALIM_MIQDARI",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "SON_ALIM_TARIXI",
+      "type": "date",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "SON_CIXIS_MIQDARI",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "SON_CIXIS_TARIXI",
+      "type": "date",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "DEPO_SO_GUN_SAYI",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "MagazaAciqSifarisleri",
+      "type": "numeric",
+      "len": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "ORTALAMA_SATIS",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "MAGAZA_STOK",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "YETMGZ",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "SEVKG",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "SIFARISE_BAGLI_SAYI",
+      "type": "int",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "SIFARISE_ACIQ_SAYI",
+      "type": "int",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "TEDARUK_TIPI_40_SAYI",
+      "type": "int",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "TEDARUK_TIPI_FERQLI",
+      "type": "int",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "SEVKIYYET_STOCK_GUNU",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "DEPO_STOCK_OUT",
+      "type": "int",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "SON_ALIS_F",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "Idxal",
+      "type": "varchar",
+      "len": 25,
+      "nullable": "YES"
+    },
+    {
+      "name": "SKT (GUN)",
+      "type": "varchar",
+      "len": 34,
+      "nullable": "YES"
+    }
+  ],
+  "vw_TS_YOLDAKI_ANBAR_QALIGI_FOR_PLANNING": [
+    {
+      "name": "CixisAnbari",
+      "type": "nvarchar",
+      "len": 50,
+      "nullable": "YES"
+    },
+    {
+      "name": "GirisAnbari",
+      "type": "nvarchar",
+      "len": 50,
+      "nullable": "YES"
+    },
+    {
+      "name": "FichId",
+      "type": "nvarchar",
+      "len": 50,
+      "nullable": "YES"
+    },
+    {
+      "name": "BelgeNo",
+      "type": "nvarchar",
+      "len": 250,
+      "nullable": "YES"
+    },
+    {
+      "name": "Date",
+      "type": "date",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "Time",
+      "type": "nvarchar",
+      "len": 4000,
+      "nullable": "YES"
+    },
+    {
+      "name": "CreatedBy",
+      "type": "nvarchar",
+      "len": 150,
+      "nullable": "YES"
+    },
+    {
+      "name": "MalzemeKodu",
+      "type": "nvarchar",
+      "len": 250,
+      "nullable": "YES"
+    },
+    {
+      "name": "MalzemeBarkodu",
+      "type": "nvarchar",
+      "len": 250,
+      "nullable": "YES"
+    },
+    {
+      "name": "MalzemeAdi",
+      "type": "nvarchar",
+      "len": 250,
+      "nullable": "YES"
+    },
+    {
+      "name": "Birim",
+      "type": "varchar",
+      "len": 51,
+      "nullable": "YES"
+    },
+    {
+      "name": "SifarisMiqdari",
+      "type": "numeric",
+      "len": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "GonderilenMiqdar",
+      "type": "float",
+      "len": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "QebulEdilenMiqdar",
+      "type": "float",
+      "len": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "YoldaQalanMiqdar",
+      "type": "float",
+      "len": null,
+      "nullable": "NO"
+    },
+    {
+      "name": "GonderenAnbaraMiqdar",
+      "type": "decimal",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "SifarisAnbarinaMiqdar",
+      "type": "decimal",
+      "len": null,
+      "nullable": "YES"
+    }
+  ],
+  "vw_TS_TOTAL_MAGAZASATISLAR": [
+    {
+      "name": "MAGAZA",
+      "type": "int",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "Növ",
+      "type": "varchar",
+      "len": 15,
+      "nullable": "YES"
+    },
+    {
+      "name": "SATIS EDV",
+      "type": "float",
+      "len": null,
+      "nullable": "YES"
+    },
+    {
+      "name": "TARIX",
+      "type": "date",
+      "len": null,
+      "nullable": "YES"
+    }
+  ],
+  "duplicate_in_store_sample": {
+    "store": "111",
+    "duplicate_count": 3945,
+    "dup_pairs": [
+      {
+        "store": "111",
+        "code": "111471",
+        "count": 2
+      },
+      {
+        "store": "111",
+        "code": "102414",
+        "count": 2
+      },
+      {
+        "store": "111",
+        "code": "105557",
+        "count": 2
+      },
+      {
+        "store": "111",
+        "code": "123887",
+        "count": 4
+      },
+      {
+        "store": "111",
+        "code": "190471",
+        "count": 2
+      }
+    ],
+    "sample_rows": [
+      {
+        "IS YERI NO": "111",
+        "URUN KODU": "111471",
+        "URUN AD": "**SANFOR DOSEME TEMIZLEYICI 1 L UNIVERSAL TROPIK",
+        "QRUP": "Q/QIDA",
+        "FAMILY CODE": "22",
+        "FAMILY NAME": "TEMIZLIK",
+        "SUB FAMILY CODE": "22.02",
+        "SUB FAMILY NAME": "EV TEMIZLIYI",
+        "CATEGORY CODE": "22.02.05",
+        "CATEGORY NAME": "TEMIZLIK MEHSULLARI",
+        "SUB CATEGORY CODE": "22.02.05.14",
+        "SUB CATEGORY NAME": "YER TEMIZLEYICI MEHSULLAR",
+        "SATICI": "500186",
+        "SATICI ADI": "KARVAN 2002 MMC",
+        "ESAS BARKOD": "4602984015771",
+        "ALTERNATİF BARKOD": "",
+        "QUTU ICI": "10.0",
+        "BLOK ICI": "1.0",
+        "VAHIDI": "ADET",
+        "TEREZI KODU": "0",
+        "SATIS QIYMETI": "5.45",
+        "SATIS QRUP KODU": null,
+        "SATIS QRUP ADI": null,
+        "SATIS EDV": "Daxil",
+        "VALYUTA SATIS": "AZN",
+        "ALIS QIYMETI": "4.31",
+        "ALIS EDV": "Daxil",
+        "VALYUTA ALIS": "AZN",
+        "SATIS ILK TARIX": "2026-05-09",
+        "SATIS SON TARIX": "2030-12-31",
+        "ALIS ILK TARIX": "2026-02-11",
+        "ALIS SON TARIX": "2030-12-31",
+        "ALIS VERGİ GÖSTERGESİ": "",
+        "SATIS VERGİ GÖSTERGESİ": "V3",
+        "MARJ": "28.83",
+        "ENDİRİM 1 %": "10 %",
+        "ENDİRİM 2 %": "0 %",
+        "ENDİRİM 3 %": "0 %",
+        "LOGISTIKA ENDIRIMI": "0 %",
+        "NITELIK": "REGULAR",
+        "MARKA": "2084",
+        "MARKA ADI": "SANFOR",
+        "SKT (GUN)": "0 gun",
+        "NET AĞIR.": "0.0",
+        "BRUT AĞIR.": "0.0",
+        "UZUNLUK": "0.0",
+        "GENİŞLİK": "0.0",
+        "YÜKSEKLİK": "0.0",
+        "IS YERI TEDARUK TIPI": "41",
+        "TEDARİKCİ BLOKAJİ": "XEYR ",
+        "ISLETICI": "XEYR ",
+        "ISLETICI FAIZI": "0.0",
+        "SIFARISSIZ GIRIS": "XEYR ",
+        "SIFARISE ACIQ": "XEYR ",
+        "FIRMA IADEYE ACIQ": "BELI ",
+        "DEPO IADEYE ACIQ": "XEYR ",
+        "SATISA BLOKLU": "XEYR ",
+        "SICAKLIK KOSULU": "001",
+        "RAPOR GRUBU": "TEMIZLIK",
+        "GENEL BLOK": "SATINALMA UMUMI BLOKU",
+        "ITEM_CREATED_DATE": "2023-10-10",
+        "SARFA ACIQ": "BAGLI",
+        "FIREYE ACIQ": "BAGLI",
+        "Idxal": "Yerli"
+      },
+      {
+        "IS YERI NO": "111",
+        "URUN KODU": "111471",
+        "URUN AD": "**SANFOR DOSEME TEMIZLEYICI 1 L UNIVERSAL TROPIK",
+        "QRUP": "Q/QIDA",
+        "FAMILY CODE": "22",
+        "FAMILY NAME": "TEMIZLIK",
+        "SUB FAMILY CODE": "22.02",
+        "SUB FAMILY NAME": "EV TEMIZLIYI",
+        "CATEGORY CODE": "22.02.05",
+        "CATEGORY NAME": "TEMIZLIK MEHSULLARI",
+        "SUB CATEGORY CODE": "22.02.05.14",
+        "SUB CATEGORY NAME": "YER TEMIZLEYICI MEHSULLAR",
+        "SATICI": "500187",
+        "SATICI ADI": "KARVAN 2002 MMC (SARVAN)",
+        "ESAS BARKOD": "4602984015771",
+        "ALTERNATİF BARKOD": "",
+        "QUTU ICI": "10.0",
+        "BLOK ICI": "1.0",
+        "VAHIDI": "ADET",
+        "TEREZI KODU": "0",
+        "SATIS QIYMETI": "5.45",
+        "SATIS QRUP KODU": null,
+        "SATIS QRUP ADI": null,
+        "SATIS EDV": "Daxil",
+        "VALYUTA SATIS": "AZN",
+        "ALIS QIYMETI": "4.31",
+        "ALIS EDV": "Daxil",
+        "VALYUTA ALIS": "AZN",
+        "SATIS ILK TARIX": "2026-05-09",
+        "SATIS SON TARIX": "2030-12-31",
+        "ALIS ILK TARIX": "2023-01-01",
+        "ALIS SON TARIX": "2030-12-31",
+        "ALIS VERGİ GÖSTERGESİ": "",
+        "SATIS VERGİ GÖSTERGESİ": "V3",
+        "MARJ": "28.83",
+        "ENDİRİM 1 %": "10 %",
+        "ENDİRİM 2 %": "0 %",
+        "ENDİRİM 3 %": "0 %",
+        "LOGISTIKA ENDIRIMI": "0 %",
+        "NITELIK": "REGULAR",
+        "MARKA": "2084",
+        "MARKA ADI": "SANFOR",
+        "SKT (GUN)": "0 gun",
+        "NET AĞIR.": "0.0",
+        "BRUT AĞIR.": "0.0",
+        "UZUNLUK": "0.0",
+        "GENİŞLİK": "0.0",
+        "YÜKSEKLİK": "0.0",
+        "IS YERI TEDARUK TIPI": "41",
+        "TEDARİKCİ BLOKAJİ": "BELI ",
+        "ISLETICI": "XEYR ",
+        "ISLETICI FAIZI": "0.0",
+        "SIFARISSIZ GIRIS": "XEYR ",
+        "SIFARISE ACIQ": "XEYR ",
+        "FIRMA IADEYE ACIQ": "BELI ",
+        "DEPO IADEYE ACIQ": "XEYR ",
+        "SATISA BLOKLU": "XEYR ",
+        "SICAKLIK KOSULU": "001",
+        "RAPOR GRUBU": "TEMIZLIK",
+        "GENEL BLOK": "SATINALMA UMUMI BLOKU",
+        "ITEM_CREATED_DATE": "2023-10-10",
+        "SARFA ACIQ": "BAGLI",
+        "FIREYE ACIQ": "BAGLI",
+        "Idxal": "Yerli"
+      }
+    ]
+  }
+}
