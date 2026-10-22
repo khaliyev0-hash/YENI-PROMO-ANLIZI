@@ -155,12 +155,18 @@ def process_and_deduplicate_stock_rows(
         raw_depo = primary_row.get("Depo stoku")
         wh_stock = float(raw_depo) if raw_depo is not None and str(raw_depo).strip() != "" and str(raw_depo).lower() != "none" else 0.0
 
-        # Packaging units
+        # Packaging units with robust error handling
         raw_case = primary_row.get("QUTU ICI")
-        case_qty = float(raw_case) if raw_case and float(raw_case) > 0 else 1.0
+        try:
+            case_qty = float(raw_case) if raw_case is not None and str(raw_case).strip() != "" and float(raw_case) > 0 else 1.0
+        except (ValueError, TypeError):
+            case_qty = 1.0
 
         raw_block = primary_row.get("BLOK ICI")
-        block_qty = float(raw_block) if raw_block and float(raw_block) > 0 else 1.0
+        try:
+            block_qty = float(raw_block) if raw_block is not None and str(raw_block).strip() != "" and float(raw_block) > 0 else 1.0
+        except (ValueError, TypeError):
+            block_qty = 1.0
 
         unit = str(primary_row.get("VAHIDI") or "ADET").strip()
         barcode = str(primary_row.get("ESAS BARKOD") or "").strip()

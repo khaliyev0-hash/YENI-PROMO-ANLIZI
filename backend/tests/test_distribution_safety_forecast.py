@@ -185,3 +185,49 @@ def test_rule15_backtest_metrics_calculation_and_insufficient_data():
     assert res_valid["wape_pct"] == 6.67
     assert res_valid["bias_pct"] == 0.0
     assert res_valid["mae"] == 8.0
+
+
+def test_disqualified_yoy_store_does_not_trigger_double_promo_risk():
+    from app.distribution.sql_engine import YoyResultTuple
+    valid_rows = [
+        ImportedRow(row_number=2, store_code="193", product_code="112611", product_name="SEKER TOZU", shelf_capacity=100.0),
+    ]
+    mock_raw_stocks = [
+        {
+            "IS YERI NO": "193", "URUN KODU": "112611", "URUN AD": "SEKER TOZU",
+            "IS YERI TEDARUK TIPI": 41, "TEDARIKCI BLOKAJI": "XEYR",
+            "Stok miqdari": 0.0, "QUTU ICI": 50.0, "BLOK ICI": 1.0, "VAHIDI": "KG"
+        }
+    ]
+
+    mock_forecast = {("193", "112611"): 100.0}
+    mock_yoy_sales = {("193", "112611"): 48.0}
+    mock_yoy_promo = {("193", "112611"): 48.0}
+    disqualified_stores = {
+        "193": {
+            "active_days": 1,
+            "required_days": 5,
+            "reason": "Store opened recently"
+        }
+    }
+    yoy_res = YoyResultTuple(mock_yoy_sales, mock_yoy_promo, disqualified_stores=disqualified_stores)
+
+    with patch("app.distribution.service.query_stock_details_for_skus", return_value=mock_raw_stocks), \
+         patch("app.distribution.service.query_sales_history_and_forecast", return_value=(mock_forecast, {})), \
+         patch("app.distribution.service.query_yoy_sales_history", return_value=yoy_res):
+
+        res = run_distribution_planning(
+            title="Disqualified Store Test",
+            valid_excel_rows=valid_rows,
+            start_date_str="2026-11-01",
+            duration_days=7,
+            promo_uplift_pct=20.0,
+            include_yoy_history=True
+        )
+
+        item = res["orders"][0]
+        # Store was disqualified from YoY, so it uses 100% current trend and does NOT flag DOUBLE_PROMO_RISK
+        assert item["forecast_method"] == "CURRENT_TREND_ONLY"
+        assert item["warning_status"] == "YOY_INSUFFICIENT_STORE_HISTORY"
+        assert "DOUBLE_PROMO_RISK" not in item["warning_status"]
+        assert item["forecast_demand"] == 120.0  # 100 * 1.2

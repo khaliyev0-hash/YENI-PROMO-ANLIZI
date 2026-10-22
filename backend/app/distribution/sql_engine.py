@@ -104,8 +104,10 @@ def query_sales_history_and_forecast(
     clean_skus = list(set(str(c).strip() for c in product_codes if c and str(c).strip()))
     clean_stores = set(str(s).strip() for s in store_codes if s and str(s).strip())
 
+    effective_history_days = max(1, int(history_days))
+    effective_duration = max(1, int(duration_days))
     hist_end = campaign_start - timedelta(days=1)
-    hist_start = hist_end - timedelta(days=history_days - 1)
+    hist_start = hist_end - timedelta(days=effective_history_days - 1)
     history_calendar_days = max(1, (hist_end - hist_start).days + 1)
 
     hist_start_str = hist_start.strftime("%Y-%m-%d")
@@ -152,7 +154,7 @@ def query_sales_history_and_forecast(
 
                 # Apply Promo Uplift percentage
                 uplift_mult = 1.0 + (max(0.0, float(promo_uplift_pct)) / 100.0)
-                projected_demand = ads * float(duration_days) * uplift_mult
+                projected_demand = ads * float(effective_duration) * uplift_mult
                 sales_map[(st, sku)] = round(projected_demand, 2)
                 if projected_demand > 0:
                     sku_store_forecasts.setdefault(sku, []).append(projected_demand)
@@ -237,12 +239,11 @@ def query_yoy_sales_history(
     try:
         # Step 1: Store History Maturity Check
         # Ensure stores had genuine ongoing sales in that window rather than an opening-day spike
-        if clean_stores:
-            try:
+        min_required_days = max(3, int(duration_days * 0.7))
+        try:
+            if clean_stores:
                 store_list = list(clean_stores)
                 st_batch_size = 200
-                min_required_days = max(3, int(duration_days * 0.7))
-                
                 for s_idx in range(0, len(store_list), st_batch_size):
                     sub_stores = store_list[s_idx:s_idx + st_batch_size]
                     st_placeholders = ",".join(["?"] * len(sub_stores))
@@ -280,8 +281,30 @@ def query_yoy_sales_history(
                                 "first_sale_date": None,
                                 "reason": f"Mağaza ({s_code}) keçən il bu dövrdə heç bir satış qeydiyyatına malik olmayıb (yeni açılmış mağaza). YoY deaktiv edildi və 100% cari satış trendi tətbiq edildi."
                             }
-            except Exception as st_err:
-                print(f"Warning: Store maturity check encountered: {st_err}")
+            else:
+                st_sql = f"""
+                SELECT 
+                    LTRIM(RTRIM(CAST(MAGAZA AS VARCHAR(20)))) AS store_code,
+                    COUNT(DISTINCT TARIX) as active_store_days,
+                    MIN(TARIX) as first_sale_date,
+                    MAX(TARIX) as last_sale_date
+                FROM dbo.fnc_TS_SALES_REPORT_FOR_PLANNING_UNION('{yoy_start_str}', '{yoy_end_str}')
+                GROUP BY LTRIM(RTRIM(CAST(MAGAZA AS VARCHAR(20))))
+                """
+                cursor.execute(st_sql)
+                for st_row in cursor.fetchall():
+                    s_code = str(st_row[0]).strip()
+                    act_days = int(st_row[1]) if st_row[1] is not None else 0
+                    first_dt = str(st_row[2]) if st_row[2] is not None else ""
+                    if act_days < min_required_days:
+                        disqualified_stores[s_code] = {
+                            "active_days": act_days,
+                            "required_days": min_required_days,
+                            "first_sale_date": first_dt,
+                            "reason": f"Mağaza ({s_code}) keçən il bu dövrdə cəmi {act_days} gün fəaliyyət göstərib (ilk satış: {first_dt}, tələb olunan: ən azı {min_required_days} gün). Təhrifin qarşısını almaq üçün YoY deaktiv edildi və 100% cari satış trendi tətbiq edildi."
+                        }
+        except Exception as st_err:
+            print(f"Warning: Store maturity check encountered: {st_err}")
 
         # Step 2: Fetch SKU sales history
         for i in range(0, len(clean_skus), batch_size):

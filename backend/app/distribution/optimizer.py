@@ -183,9 +183,9 @@ def calculate_net_order(
             rec_units = float(rec_blocks * bq)
             rec_cases = 0
         else:
-            rec_units = float(math.ceil(net_req)) if unit.upper() in ["ADET", "DƏNƏ", "ED"] else round(net_req, 2)
-            rec_cases = int(math.ceil(rec_units))
-            rec_blocks = int(math.ceil(rec_units))
+            rec_units = float(math.ceil(net_req)) if unit.upper() in ["ADET", "DƏNƏ", "ED", "ƏDƏD", "DENE", "PCS", "PC"] else round(net_req, 2)
+            rec_cases = 0
+            rec_blocks = 0
     else:
         rec_cases = 0
         rec_blocks = 0
@@ -199,7 +199,14 @@ def calculate_net_order(
     warning_msg = warning_reason
 
     if warning in ["OK", "FALLBACK_NETWORK_AVG", "INITIAL_SHELF_FILL", "ZERO_CURRENT_SALES_YOY_FALLBACK", "DOUBLE_PROMO_RISK", "YOY_INSUFFICIENT_STORE_HISTORY"]:
-        if rec_units > shelf_capacity and shelf_capacity > 0:
+        if target_ending_stock > shelf_capacity and shelf_capacity > 0:
+            base_msg = f"Hədəf bitiş stoku ({target_ending_stock}) rəf tutumundan ({shelf_capacity}) böyükdür. Arxa anbar ehtiyatı tələb olunacaq."
+            if warning_reason:
+                base_msg += f" [{warning_reason}]"
+            warning_msg = base_msg
+            if warning == "OK":
+                warning = "TARGET_EXCEEDS_SHELF"
+        elif rec_units > shelf_capacity and shelf_capacity > 0:
             base_msg = f"Tövsiyə olunan sifariş ({rec_units}) rəf tutumunu ({shelf_capacity}) aşır. Arxa anbar sahəsi tələb olunur."
             if warning_reason:
                 base_msg += f" [{warning_reason}]"

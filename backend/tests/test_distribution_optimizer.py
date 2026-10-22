@@ -133,3 +133,43 @@ def test_incoming_stock_is_not_deducted():
     assert item.recommended_order_units == 64.0
 
 
+
+
+def test_packaging_cq_1_yields_zero_cases_for_bulk_or_loose_units():
+    # Analytics Rule: When cq <= 1 (bulk/loose item like KG sugar or fruit), recommended_cases MUST be 0
+    item = calculate_net_order(
+        store_code="193",
+        product_code="112611",
+        product_name="SEKER TOZU 1 KG",
+        start_date="2026-11-01",
+        end_date="2026-11-07",
+        duration_days=7,
+        forecast_demand=12.34,
+        current_stock=0.0,
+        usable_current_stock=0.0,
+        shelf_capacity=100.0,
+        case_quantity=1.0,
+        unit="KG"
+    )
+    assert item.net_requirement == 12.34
+    assert item.recommended_order_units == 12.34
+    assert item.recommended_cases == 0  # NOT 13!
+    assert item.recommended_blocks == 0
+
+def test_target_ending_stock_exceeds_shelf_capacity_warning():
+    item = calculate_net_order(
+        store_code="101",
+        product_code="100003",
+        product_name="AHMAD TEA",
+        start_date="2026-11-01",
+        end_date="2026-11-07",
+        duration_days=7,
+        forecast_demand=10.0,
+        current_stock=10.0,
+        usable_current_stock=10.0,
+        shelf_capacity=20.0,
+        case_quantity=12.0,
+        target_ending_stock=30.0  # Exceeds shelf capacity 20.0
+    )
+    assert item.warning_status == "TARGET_EXCEEDS_SHELF"
+    assert "Hədəf bitiş stoku" in item.warning_message

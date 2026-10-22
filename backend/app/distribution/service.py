@@ -155,7 +155,10 @@ def run_distribution_planning(
                 fc_method = "NETWORK_AVERAGE_FALLBACK"
                 fc_confidence = "LIMITED"
                 row_warning = "FALLBACK_NETWORK_AVG"
-                warn_reason = f"Mağazada həm cari, həm də keçən il satışı 0-dır. Şəbəkənin digər mağazalarının orta tələbatı ({net_avg_fc:.1f}) tətbiq edildi. Əllə yoxlama tövsiyə olunur."
+                reason_detail = f"Mağazada həm cari, həm də keçən il satışı 0-dır."
+                if is_yoy_disqualified:
+                    reason_detail = f"Mağazada cari satış 0-dır və keçən il tarixçəsi natamamdır ({disqual_info.get('reason', '')})."
+                warn_reason = f"{reason_detail} Şəbəkənin digər mağazalarının orta tələbatı ({net_avg_fc:.1f}) tətbiq edildi. Əllə yoxlama tövsiyə olunur."
             else:
                 base_demand = 0.0
                 curr_stk_check = stock_info.current_stock if stock_info else 0.0
@@ -178,7 +181,7 @@ def run_distribution_planning(
             uplift_mult = 1.0
             uplift_source = "HISTORICAL_PROMO_EMBEDDED"
             warn_reason = (warn_reason or "") + f" Keçən ilin dövrü artıq aksiya olub (Aksiya satışı: {yoy_promo:.1f}). Təkrar promo artımının qarşısı alındı."
-        elif yoy_promo > 0 and promo_uplift_pct > 0:
+        elif yoy_promo > 0 and not is_yoy_disqualified and promo_uplift_pct > 0:
             uplift_mult = 1.0 + (max(0.0, float(promo_uplift_pct)) / 100.0)
             uplift_source = "USER_PARAM_WITH_HISTORICAL_PROMO_FLAG"
             if row_warning == "OK":
