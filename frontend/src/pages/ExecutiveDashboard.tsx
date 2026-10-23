@@ -11,6 +11,7 @@ import {
 import { Skeleton, SkeletonCard, SkeletonTable } from '../components/common/Skeleton';
 import { AnimatedCounter } from '../components/common/AnimatedCounter';
 import { SpotlightCard } from '../components/common/SpotlightCard';
+import { MultiRingGauge } from '../components/common/MultiRingGauge';
 import { useTheme } from '../context/ThemeContext';
 import { isPromoTypeMatch } from '../utils/filterUtils';
 import type { DailySalesRecord } from '../types';
@@ -185,6 +186,14 @@ export const ExecutiveDashboard: React.FC = () => {
   const maxCumVal = realCumValues.length > 0 ? Math.max(...realCumValues) : 0;
   const lastRealIndex = dailyTrendData.map(d => d.cumPct !== null).lastIndexOf(true);
 
+  const sparklineSalesSeries = dailyTrendData
+    .filter(d => d.dailySales !== null && d.dailySales !== undefined)
+    .map(d => Number(d.dailySales) || 0);
+
+  const sparklineCumSeries = dailyTrendData
+    .filter(d => d.cumPct !== null && d.cumPct !== undefined)
+    .map(d => Number(d.cumPct) || 0);
+
   return (
     <div className="space-y-6 pb-12 text-xs">
       {/* Top Header & View Mode Toggle with Dynamic Animated Satış Reallaşması Widget */}
@@ -298,6 +307,7 @@ export const ExecutiveDashboard: React.FC = () => {
           color="emerald"
           variant="solid"
           trend={`✨ Nailiyyət: ${achievementRate}%`}
+          sparklineData={sparklineSalesSeries.length > 1 ? sparklineSalesSeries : undefined}
         />
         {/* Nailiyyət Faizi -> solid emerald if >=70% else amber */}
         <KPICard
@@ -308,6 +318,7 @@ export const ExecutiveDashboard: React.FC = () => {
           color={achievementRate >= 70 ? 'emerald' : 'amber'}
           variant="solid"
           subtext="Actual vs Target"
+          sparklineData={sparklineCumSeries.length > 1 ? sparklineCumSeries : undefined}
         />
         {/* Dövr Sonu Proqnoz -> soft emerald or amber */}
         <KPICard
@@ -341,6 +352,34 @@ export const ExecutiveDashboard: React.FC = () => {
           subtext="Total Mağaza Mövcudluğu (OSA)"
         />
       </div>
+
+      {/* Executive Macro Health Multi-Ring Radial Gauge */}
+      <MultiRingGauge
+        title="TamStore İcra və Sağlamlıq İndeksi (Macro Health Index)"
+        subtitle="Satış Reallaşması, Proqnoz Qaçış Sürəti və Şəbəkə Stok Sağlamlığının Sinxron Reallaşması"
+        rings={[
+          {
+            label: "Satış Hədəfi Reallaşması",
+            value: achievementRate,
+            color: "#3b82f6",
+            trackColor: isDark ? "rgba(59, 130, 246, 0.18)" : "rgba(59, 130, 246, 0.12)"
+          },
+          {
+            label: "Dövr Sonu Proqnoz (Run-Rate)",
+            value: projectedAchievement,
+            color: "#f59e0b",
+            trackColor: isDark ? "rgba(245, 158, 11, 0.18)" : "rgba(245, 158, 11, 0.12)"
+          },
+          {
+            label: "Stok Sağlamlığı (OSA Mövcudluq)",
+            value: Number(kpi_cards.availability_pct ?? (100 - (kpi_cards.stockout_rate_pct || 0)).toFixed(1)) || 95,
+            color: "#10b981",
+            trackColor: isDark ? "rgba(16, 185, 129, 0.18)" : "rgba(16, 185, 129, 0.12)"
+          }
+        ]}
+        centerValue={`${achievementRate}%`}
+        centerLabel="Reallaşma"
+      />
 
       {/* 1. Hedefe Doğru Günlük Gerçekleşme (Daily Cumulative & Daily Progress) */}
       <div className={`p-6 rounded-2xl border shadow-xl space-y-4 card-hover relative overflow-hidden transition-all duration-300 luminous-border-blue ${

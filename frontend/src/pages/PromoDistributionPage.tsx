@@ -10,6 +10,9 @@ import {
   lockForecasting,
   ForecastingPasswordModal
 } from '../components/common/ForecastingPasswordModal';
+import { SupplyDemandWaterfall } from '../components/common/SupplyDemandWaterfall';
+import { GlowingBadge } from '../components/common/GlowingBadge';
+import { EmptyState } from '../components/common/EmptyState';
 
 interface ImportedRow {
   row_number: number;
@@ -781,6 +784,17 @@ export const PromoDistributionPage: React.FC = () => {
             </div>
           </div>
 
+          {/* Supply-Demand Waterfall Visualization */}
+          <SupplyDemandWaterfall
+            forecastDemand={resultsData.summary?.total_forecast_demand || 0}
+            targetEndingStock={targetEndingStock || 0}
+            currentStock={resultsData.summary?.total_current_stock || 0}
+            netRequirement={resultsData.summary?.total_net_requirement || 0}
+            recommendedOrder={resultsData.summary?.total_recommended_order_units || 0}
+            recommendedCases={resultsData.summary?.total_recommended_cases || 0}
+            unit="Ədəd"
+          />
+
           {/* Results Action Bar & Excel Export */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
             {/* Inner Subtabs (Orders, Stores, SKUs, Exceptions) */}
@@ -982,24 +996,17 @@ export const PromoDistributionPage: React.FC = () => {
                           <td className="py-2 px-3 text-right font-bold text-indigo-600">{item.recommended_cases}</td>
                           <td className="py-2 px-3 text-right text-slate-400">{item.excess_units_from_rounding}</td>
                           <td className="py-2 px-3 text-center">
-                            <span 
+                            <GlowingBadge
+                              variant={
+                                item.warning_status === 'OK' ? 'optimal' :
+                                item.warning_status === 'SUPPLIER_BLOCKED' ? 'critical' :
+                                item.warning_status === 'DOUBLE_PROMO_RISK' ? 'purple' :
+                                item.warning_status === 'FALLBACK_NETWORK_AVG' ? 'info' :
+                                'warning'
+                              }
+                              label={item.warning_status}
                               title={item.warning_reason || item.warning_message || item.warning_status}
-                              className={`px-2 py-0.5 rounded-full text-[10px] font-bold inline-block cursor-help ${
-                                item.warning_status === 'OK'
-                                  ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
-                                  : item.warning_status === 'FALLBACK_NETWORK_AVG'
-                                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
-                                  : item.warning_status === 'ZERO_CURRENT_SALES_YOY_FALLBACK'
-                                  ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
-                                  : item.warning_status === 'DOUBLE_PROMO_RISK'
-                                  ? 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300'
-                                  : item.warning_status === 'SUPPLIER_BLOCKED'
-                                  ? 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300'
-                                  : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
-                              }`}
-                            >
-                              {item.warning_status}
-                            </span>
+                            />
                           </td>
                         </tr>
                       );

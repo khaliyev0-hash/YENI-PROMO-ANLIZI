@@ -1,6 +1,7 @@
 import React, { useRef, useState, useCallback } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import { useCountUp } from '../../hooks/useCountUp';
+import { Sparkline } from './Sparkline';
 
 interface KPICardProps {
   title: string;
@@ -13,6 +14,7 @@ interface KPICardProps {
   index?: number;
   delayMs?: number;
   luminousBorder?: 'blue' | 'amber' | 'cyan' | 'emerald' | 'rose' | boolean;
+  sparklineData?: number[];
 }
 
 export const KPICard: React.FC<KPICardProps> = ({
@@ -25,7 +27,8 @@ export const KPICard: React.FC<KPICardProps> = ({
   trend,
   index = 0,
   delayMs,
-  luminousBorder = true
+  luminousBorder = true,
+  sparklineData
 }) => {
   const animatedValue = useCountUp(value, 900);
   const calculatedDelay = delayMs !== undefined ? delayMs : index * 70;
@@ -185,6 +188,16 @@ export const KPICard: React.FC<KPICardProps> = ({
           </span>
         )}
       </div>
+
+      {sparklineData && sparklineData.length > 1 && (
+        <div className="pt-0.5 relative z-10">
+          <Sparkline
+            data={sparklineData}
+            color={color === 'slate' ? 'blue' : color}
+            height={26}
+          />
+        </div>
+      )}
 
       {subtext && (
         <div className="pt-1 border-t border-slate-100/80 dark:border-slate-800 flex items-center justify-between relative z-10">

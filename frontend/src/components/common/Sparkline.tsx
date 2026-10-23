@@ -5,7 +5,7 @@ export interface SparklineProps {
   width?: number;
   height?: number;
   strokeWidth?: number;
-  color?: 'emerald' | 'rose' | 'blue' | 'amber' | 'indigo' | 'auto';
+  color?: 'emerald' | 'rose' | 'blue' | 'amber' | 'indigo' | 'purple' | 'cyan' | 'auto';
   showFill?: boolean;
   showEndDot?: boolean;
   showBadge?: boolean;
@@ -81,6 +81,12 @@ export const Sparkline: React.FC<SparklineProps> = ({
   } else if (color === 'indigo') {
     strokeColor = '#6366f1';
     fillColor = '#818cf8';
+  } else if (color === 'purple') {
+    strokeColor = '#8b5cf6';
+    fillColor = '#a78bfa';
+  } else if (color === 'cyan') {
+    strokeColor = '#06b6d4';
+    fillColor = '#67e8f9';
   }
 
   // Calculate coordinates with margins so strokes aren't clipped
@@ -99,20 +105,19 @@ export const Sparkline: React.FC<SparklineProps> = ({
     return { x, y };
   });
 
-  // Build SVG path
-  let pathD = `M ${points[0].x} ${points[0].y}`;
+  // Build smooth Bezier SVG path
+  let pathD = `M ${points[0].x.toFixed(2)} ${points[0].y.toFixed(2)}`;
   for (let i = 1; i < points.length; i++) {
-    // Smooth Catmull-Rom or Bezier interpolation between points
     const prev = points[i - 1];
     const curr = points[i];
     const midX = (prev.x + curr.x) / 2;
-    pathD += ` C ${midX} ${prev.y}, ${midX} ${curr.y}, ${curr.x} ${curr.y}`;
+    pathD += ` C ${midX.toFixed(2)} ${prev.y.toFixed(2)}, ${midX.toFixed(2)} ${curr.y.toFixed(2)}, ${curr.x.toFixed(2)} ${curr.y.toFixed(2)}`;
   }
 
   // Area path for gradient fill
   const lastPoint = points[points.length - 1];
   const firstPoint = points[0];
-  const areaD = `${pathD} L ${lastPoint.x} ${height} L ${firstPoint.x} ${height} Z`;
+  const areaD = `${pathD} L ${lastPoint.x.toFixed(2)} ${height} L ${firstPoint.x.toFixed(2)} ${height} Z`;
 
   // Trend percent
   const pctChange = firstVal === 0
@@ -145,6 +150,7 @@ export const Sparkline: React.FC<SparklineProps> = ({
           strokeWidth={strokeWidth}
           strokeLinecap="round"
           strokeLinejoin="round"
+          className="drop-shadow-xs"
         />
 
         {/* Glowing End Dot */}
