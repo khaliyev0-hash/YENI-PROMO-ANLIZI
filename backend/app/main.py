@@ -962,19 +962,36 @@ def get_promo_uplift_endpoint(
     category: Optional[str] = None,
     promo_type: Optional[str] = None,
     status: Optional[str] = None,
-    search: Optional[str] = None
+    search: Optional[str] = None,
+    store: Optional[str] = None,
+    campaign_id: Optional[str] = None,
+    beg_date: Optional[str] = None,
+    end_date: Optional[str] = None
 ):
+    if campaign_id:
+        active_id = get_active_campaign_id()
+        if active_id != campaign_id:
+            c_data = load_campaign_archive(campaign_id)
+            if c_data and is_valid_campaign_data(c_data):
+                restore_campaign_session(c_data)
+
     fact_df, _ = ensure_active_fact_df()
-    beg_date = session_state.get("beg_date", "2026-10-05")
-    end_date = session_state.get("end_date", "2026-10-10")
+    b_date = beg_date or session_state.get("beg_date", "2026-10-15")
+    e_date = end_date or session_state.get("end_date", "2026-10-28")
+
+    analytics_res = session_state.get("analytics_result") or {}
+    daily_sales = analytics_res.get("daily_sales") if isinstance(analytics_res, dict) else None
+
     return compute_promo_uplift(
         fact_df=fact_df,
-        beg_date=beg_date,
-        end_date=end_date,
+        beg_date=b_date,
+        end_date=e_date,
         category_filter=category,
         promo_type_filter=promo_type,
         status_filter=status,
-        search_query=search
+        search_query=search,
+        store_filter=store,
+        daily_sales_records=daily_sales
     )
 
 

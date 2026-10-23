@@ -38,7 +38,13 @@ export const PromoUpliftPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE}/promo-uplift`);
+      const params = new URLSearchParams();
+      if (activeCampaignId) params.append('campaign_id', activeCampaignId);
+      if (filters?.selectedStore && filters.selectedStore !== 'ALL') {
+        params.append('store', filters.selectedStore);
+      }
+      const qs = params.toString() ? `?${params.toString()}` : '';
+      const res = await fetch(`${API_BASE}/promo-uplift${qs}`);
       if (!res.ok) {
         throw new Error(`Server xətası: ${res.status}`);
       }
@@ -54,7 +60,7 @@ export const PromoUpliftPage: React.FC = () => {
 
   useEffect(() => {
     fetchUpliftData();
-  }, [activeCampaignId]);
+  }, [activeCampaignId, filters?.selectedStore]);
 
   // Client-side filtering
   const filteredItems = useMemo(() => {
@@ -167,6 +173,18 @@ export const PromoUpliftPage: React.FC = () => {
     };
   }, [filteredItems]);
 
+  const statusCounts = useMemo(() => {
+    const items = apiData?.items || [];
+    return {
+      all: items.length,
+      high: items.filter(r => r.status === 'HIGH').length,
+      positive: items.filter(r => r.uplift_qty > 0).length,
+      moderate: items.filter(r => r.status === 'MODERATE').length,
+      negative: items.filter(r => r.uplift_qty < 0).length,
+      new: items.filter(r => r.status === 'NEW').length,
+    };
+  }, [apiData?.items]);
+
   // Reset pagination on filter change
   useEffect(() => {
     setCurrentPage(1);
@@ -203,8 +221,9 @@ export const PromoUpliftPage: React.FC = () => {
       'Promo Növü': item.promo_type === 'tesir' || item.promo_type === 'teshir' ? 'Təsir' : 'Adi',
       'Mağaza Sayı': item.store_count,
       '14 Günlük Normal Baza Satış': item.normal_14d_sale,
-      'Kampaniya Dövrü Baza (Extrapolyasiya)': item.baseline_sale,
+      'Dövrə Uyğun Normal Baza': item.baseline_sale,
       'Real Promo Satış': item.promo_sale,
+      'Son Gün Satışı': item.last_day_sale,
       'Əlavə Satış (Uplift Ədəd)': item.uplift_qty,
       'Uplift %': item.uplift_pct !== null ? `${item.uplift_pct}%` : '',
       'Qalıq Stok': item.stock,
@@ -299,6 +318,21 @@ export const PromoUpliftPage: React.FC = () => {
                 <span className="font-bold text-[11px]">14G Normal Baza:</span>
                 <span className="font-mono font-semibold text-[11px]">{apiData.pre_beg_date} &rarr; {apiData.pre_end_date}</span>
               </div>
+
+              {apiData.is_ongoing && (
+                <div className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-emerald-50/90 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700 text-emerald-800 dark:text-emerald-300 shadow-xs">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping inline-block" />
+                  <span className="font-bold text-[11px]">Davam edir:</span>
+                  <span className="font-mono font-black text-[11px]">{apiData.elapsed_days} / {apiData.promo_days} gün ({apiData.latest_sales_date}-dək)</span>
+                </div>
+              )}
+
+              {filters?.selectedStore && filters.selectedStore !== 'ALL' && (
+                <div className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-purple-50/90 dark:bg-purple-950/40 border border-purple-300 dark:border-purple-700 text-purple-800 dark:text-purple-300 shadow-xs">
+                  <span className="font-bold text-[11px]">Mağaza:</span>
+                  <span className="font-mono font-black text-[11px]">{filters.selectedStore}</span>
+                </div>
+              )}
             </>
           )}
 
@@ -373,7 +407,7 @@ export const PromoUpliftPage: React.FC = () => {
               <AnimatedCounter value={dynamicSummary.total_baseline} />
             </div>
             <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
-              14G tempinə görə baza
+              {apiData?.is_ongoing ? `${apiData.elapsed_days} günlük normal baza` : `${apiData?.promo_days || 14} günlük normal baza`}
             </div>
           </div>
         </SpotlightCard>
@@ -435,7 +469,7 @@ export const PromoUpliftPage: React.FC = () => {
         {/* 5. Son Gün Satışı */}
         <SpotlightCard spotlightColor="purple" glowBorder="cyan" className="p-3.5 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider">Son Gün Satışı</span>
+            <span className="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider">Son Satış Günü</span>
             <div className="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
               <Calendar className="w-4 h-4" />
             </div>
@@ -445,7 +479,7 @@ export const PromoUpliftPage: React.FC = () => {
               <AnimatedCounter value={dynamicSummary.total_last_day_sale} />
             </div>
             <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
-              İnsertin son günü ({apiData?.end_date || 'Son'})
+              Son gün ({apiData?.latest_sales_date || apiData?.end_date || 'Son'})
             </div>
           </div>
         </SpotlightCard>
@@ -528,7 +562,7 @@ export const PromoUpliftPage: React.FC = () => {
                   : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
               }`}
             >
-              Hamısı ({apiData?.items?.length || 0})
+              Hamısı ({statusCounts.all})
             </button>
 
             <button
@@ -540,7 +574,7 @@ export const PromoUpliftPage: React.FC = () => {
               }`}
             >
               <Sparkles className="w-3 h-3" />
-              <span>Yüksək (≥100%)</span>
+              <span>Yüksək (≥100%) ({statusCounts.high})</span>
             </button>
 
             <button
@@ -552,7 +586,18 @@ export const PromoUpliftPage: React.FC = () => {
               }`}
             >
               <TrendingUp className="w-3 h-3" />
-              <span>Bütün Artanlar (&gt;0)</span>
+              <span>Bütün Artanlar (&gt;0) ({statusCounts.positive})</span>
+            </button>
+
+            <button
+              onClick={() => setSelectedStatus('MODERATE')}
+              className={`inline-flex items-center space-x-1 px-3 py-1 rounded-lg text-[11px] font-bold transition-all ${
+                selectedStatus === 'MODERATE'
+                  ? 'bg-cyan-600 text-white shadow-xs'
+                  : 'bg-cyan-50 dark:bg-cyan-950/60 hover:bg-cyan-100 dark:hover:bg-cyan-900/60 text-cyan-700 dark:text-cyan-300'
+              }`}
+            >
+              <span>Mülayim (20-100%) ({statusCounts.moderate})</span>
             </button>
 
             <button
@@ -564,7 +609,7 @@ export const PromoUpliftPage: React.FC = () => {
               }`}
             >
               <TrendingDown className="w-3 h-3" />
-              <span>Mənfi / Zəif (&lt;0)</span>
+              <span>Mənfi / Zəif (&lt;0) ({statusCounts.negative})</span>
             </button>
 
             <button
@@ -575,7 +620,7 @@ export const PromoUpliftPage: React.FC = () => {
                   : 'bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 dark:hover:bg-amber-900/60 text-amber-700 dark:text-amber-300'
               }`}
             >
-              Yeni / Bazasız
+              Yeni / Bazasız ({statusCounts.new})
             </button>
           </div>
 
@@ -595,8 +640,9 @@ export const PromoUpliftPage: React.FC = () => {
                 <th className="p-3 text-center font-bold">Növ</th>
                 <SortableHeader label="Mağaza" field="store_count" currentSortField={sortField} sortAsc={sortAsc} onSort={handleSort} align="center" />
                 <SortableHeader label="14G Normal Baza" field="normal_14d_sale" currentSortField={sortField} sortAsc={sortAsc} onSort={handleSort} align="right" />
-                <SortableHeader label="Kampaniya Bazası" field="baseline_sale" currentSortField={sortField} sortAsc={sortAsc} onSort={handleSort} align="right" />
+                <SortableHeader label={apiData?.is_ongoing ? `Baza (${apiData.elapsed_days}G)` : "Gözlənilən Baza"} field="baseline_sale" currentSortField={sortField} sortAsc={sortAsc} onSort={handleSort} align="right" />
                 <SortableHeader label="Promo Satış" field="promo_sale" currentSortField={sortField} sortAsc={sortAsc} onSort={handleSort} align="right" />
+                <SortableHeader label="Son Gün" field="last_day_sale" currentSortField={sortField} sortAsc={sortAsc} onSort={handleSort} align="right" />
                 <SortableHeader label="Əlavə Satış" field="uplift_qty" currentSortField={sortField} sortAsc={sortAsc} onSort={handleSort} align="right" />
                 <SortableHeader label="Uplift %" field="uplift_pct" currentSortField={sortField} sortAsc={sortAsc} onSort={handleSort} align="right" />
                 <th className="p-3 text-center font-bold">Status</th>
@@ -606,7 +652,7 @@ export const PromoUpliftPage: React.FC = () => {
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900">
               {loading ? (
                 <tr>
-                  <td colSpan={11} className="p-12 text-center text-slate-500 dark:text-slate-400">
+                  <td colSpan={12} className="p-12 text-center text-slate-500 dark:text-slate-400">
                     <div className="inline-flex items-center space-x-3">
                       <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
                       <span className="font-bold text-sm">Promo uplift məlumatları hesablanır...</span>
@@ -615,7 +661,7 @@ export const PromoUpliftPage: React.FC = () => {
                 </tr>
               ) : paginatedItems.length === 0 ? (
                 <tr>
-                  <td colSpan={11} className="p-12 text-center text-slate-400">
+                  <td colSpan={12} className="p-12 text-center text-slate-400">
                     <div className="space-y-1">
                       <p className="font-bold text-sm">Axtarışa uyğun məhsul tapılmadı</p>
                       <p className="text-xs">Filtirləri təmizləyərək yenidən yoxlayın</p>
@@ -693,6 +739,11 @@ export const PromoUpliftPage: React.FC = () => {
                       {/* Promo Sale */}
                       <td className="p-3 text-right font-mono font-black text-slate-900 dark:text-white whitespace-nowrap">
                         {(item.promo_sale ?? 0).toLocaleString()}
+                      </td>
+
+                      {/* Son Gün Satışı */}
+                      <td className="p-3 text-right font-mono font-bold text-indigo-700 dark:text-indigo-400 whitespace-nowrap">
+                        {(item.last_day_sale ?? 0).toLocaleString()}
                       </td>
 
                       {/* Uplift Qty */}

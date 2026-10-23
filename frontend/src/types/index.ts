@@ -300,6 +300,7 @@ export interface PromoUpliftItem {
   normal_14d_sale: number;
   daily_baseline: number;
   baseline_sale: number;
+  full_baseline_sale?: number;
   promo_sale: number;
   last_day_sale: number;
   uplift_qty: number;
@@ -327,6 +328,9 @@ export interface PromoUpliftResponse {
   beg_date: string;
   end_date: string;
   promo_days: number;
+  elapsed_days?: number;
+  is_ongoing?: boolean;
+  latest_sales_date?: string;
   pre_beg_date: string;
   pre_end_date: string;
   summary: PromoUpliftSummary;

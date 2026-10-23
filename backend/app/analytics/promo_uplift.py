@@ -17,8 +17,8 @@ from app.db import (
 logger = logging.getLogger(__name__)
 
 # In-memory caches to make repeated requests instantaneous
-_UPLIFT_PRE_PROMO_CACHE: Dict[Tuple[str, str, Tuple[str, ...]], Dict[str, float]] = {}
-_UPLIFT_LAST_DAY_CACHE: Dict[Tuple[str, Tuple[str, ...]], Dict[str, float]] = {}
+_UPLIFT_PRE_PROMO_CACHE: Dict[Tuple[str, str, Tuple[str, ...], Tuple[str, ...]], Dict[str, float]] = {}
+_UPLIFT_LAST_DAY_CACHE: Dict[Tuple[str, Tuple[str, ...], Tuple[str, ...]], Dict[str, float]] = {}
 
 
 def fetch_pre_promo_14d_sales(
@@ -42,7 +42,8 @@ def fetch_pre_promo_14d_sales(
     pre_end_str = pre_end_dt.strftime("%Y-%m-%d")
 
     clean_items = sorted(list(set(normalize_item_code(c) for c in item_codes if normalize_item_code(c))))
-    cache_key = (pre_beg_str, pre_end_str, tuple(clean_items))
+    clean_stores = tuple(sorted(list(str(s) for s in store_codes))) if store_codes else ()
+    cache_key = (pre_beg_str, pre_end_str, tuple(clean_items), clean_stores)
     if cache_key in _UPLIFT_PRE_PROMO_CACHE:
         return _UPLIFT_PRE_PROMO_CACHE[cache_key], pre_beg_str, pre_end_str
 
@@ -130,7 +131,8 @@ def fetch_last_day_insert_sales(
     """
     last_day_str = str(end_date)[:10]
     clean_items = sorted(list(set(normalize_item_code(c) for c in item_codes if normalize_item_code(c))))
-    cache_key = (last_day_str, tuple(clean_items))
+    clean_stores = tuple(sorted(list(str(s) for s in store_codes))) if store_codes else ()
+    cache_key = (last_day_str, tuple(clean_items), clean_stores)
     if cache_key in _UPLIFT_LAST_DAY_CACHE:
         return _UPLIFT_LAST_DAY_CACHE[cache_key]
 
@@ -215,6 +217,8 @@ def compute_promo_uplift(
     promo_type_filter: Optional[str] = None,
     status_filter: Optional[str] = None,
     search_query: Optional[str] = None,
+    store_filter: Optional[str] = None,
+    daily_sales_records: Optional[List[Dict[str, Any]]] = None,
     custom_baseline_map: Optional[Dict[str, float]] = None,
     custom_last_day_map: Optional[Dict[str, float]] = None
 ) -> Dict[str, Any]:
@@ -222,16 +226,20 @@ def compute_promo_uplift(
     Computes Promo Uplift analysis per SKU:
     Baseline: 14 days normal sales prior to promo start date.
     Promo Duration: (end_date - beg_date) + 1 days.
-    Extrapolated Baseline: (normal_14d / 14) * promo_days.
+    Elapsed Sales Days: actual recorded sales days so far during the promo.
+    Extrapolated Baseline: (normal_14d / 14) * elapsed_days (for like-for-like comparison).
     Incremental Sales (Uplift Qty): promo_sale - baseline.
     Uplift %: (promo_sale - baseline) / baseline * 100%.
-    Last Day Sales: promo sales recorded on the final day of the promotion.
+    Latest Sales Day: promo sales recorded on the latest active day of the promotion.
     """
     if fact_df is None or fact_df.empty:
         return {
             "beg_date": beg_date or "",
             "end_date": end_date or "",
             "promo_days": 0,
+            "elapsed_days": 0,
+            "is_ongoing": False,
+            "latest_sales_date": "",
             "pre_beg_date": "",
             "pre_end_date": "",
             "summary": {
@@ -253,25 +261,62 @@ def compute_promo_uplift(
         }
 
     # Normalize dates
-    beg_date_clean = str(beg_date)[:10] if beg_date else "2026-10-05"
-    end_date_clean = str(end_date)[:10] if end_date else "2026-10-10"
+    beg_date_clean = str(beg_date)[:10] if beg_date else "2026-10-15"
+    end_date_clean = str(end_date)[:10] if end_date else "2026-10-28"
 
     try:
         b_dt = datetime.strptime(beg_date_clean, "%Y-%m-%d")
         e_dt = datetime.strptime(end_date_clean, "%Y-%m-%d")
         promo_days = max(1, (e_dt - b_dt).days + 1)
     except Exception:
-        promo_days = 6
+        b_dt = datetime(2026, 10, 15)
+        e_dt = datetime(2026, 10, 28)
+        promo_days = 14
 
-    # Get active stores safely with fallback
-    try:
-        active_stores, _ = get_active_store_codes()
-    except Exception as e:
-        logger.warning("Could not fetch active store codes: %s", e)
-        active_stores = set(fact_df['STORE'].dropna().unique().tolist()) if 'STORE' in fact_df.columns else None
+    # Determine elapsed days and latest sales date (for active / ongoing campaign support)
+    elapsed_days = promo_days
+    latest_sales_date = end_date_clean
+    is_ongoing = False
+
+    if daily_sales_records and isinstance(daily_sales_records, list):
+        actual_days = [d for d in daily_sales_records if d.get('daily_sale') is not None and not d.get('is_future')]
+        if actual_days:
+            elapsed_days = len(actual_days)
+            latest_sales_date = str(actual_days[-1].get('date', end_date_clean))[:10]
+            if elapsed_days < promo_days:
+                is_ongoing = True
+    else:
+        today_date = datetime.now().date()
+        if today_date < b_dt.date():
+            elapsed_days = 1
+            latest_sales_date = beg_date_clean
+            is_ongoing = True
+        elif today_date <= e_dt.date():
+            elapsed_days = min(promo_days, max(1, (today_date - b_dt.date()).days + 1))
+            latest_sales_date = (b_dt + timedelta(days=elapsed_days - 1)).strftime("%Y-%m-%d")
+            if elapsed_days < promo_days:
+                is_ongoing = True
+        else:
+            elapsed_days = promo_days
+            latest_sales_date = end_date_clean
+            is_ongoing = False
+
+    # Apply store filter if provided
+    df = fact_df.copy()
+    if store_filter and str(store_filter).strip() and str(store_filter).strip().upper() != 'ALL':
+        clean_sf = normalize_store_code(str(store_filter).strip()) or str(store_filter).strip()
+        df['_clean_store'] = df['STORE'].astype(str).map(lambda s: normalize_store_code(s) or s)
+        df = df[df['_clean_store'] == clean_sf]
+        active_stores = {clean_sf}
+    else:
+        # Get active stores safely with fallback
+        try:
+            active_stores, _ = get_active_store_codes()
+        except Exception as e:
+            logger.warning("Could not fetch active store codes: %s", e)
+            active_stores = set(fact_df['STORE'].dropna().unique().tolist()) if 'STORE' in fact_df.columns else None
 
     # Normalize codes in fact_df
-    df = fact_df.copy()
     df['_clean_code'] = df['CODE'].astype(str).str.strip().map(lambda c: normalize_item_code(c) or c)
     unique_items = df['_clean_code'].unique().tolist()
 
@@ -285,12 +330,12 @@ def compute_promo_uplift(
             beg_date_clean, unique_items, store_codes=active_stores
         )
 
-    # 2. Fetch last day promo sales map
+    # 2. Fetch latest active promo day sales map
     if custom_last_day_map is not None:
         last_day_map = custom_last_day_map
     else:
         last_day_map = fetch_last_day_insert_sales(
-            end_date_clean, unique_items, store_codes=active_stores
+            latest_sales_date, unique_items, store_codes=active_stores
         )
 
     # 3. Aggregate fact_df at SKU level
@@ -321,7 +366,8 @@ def compute_promo_uplift(
         # Pre-promo 14d and Baseline calculations
         normal_14d = float(normal_14d_map.get(clean_code, 0.0))
         daily_baseline = round(normal_14d / 14.0, 2)
-        baseline_sale = round(daily_baseline * promo_days, 2)
+        baseline_sale = round(daily_baseline * elapsed_days, 2)
+        full_baseline_sale = round(daily_baseline * promo_days, 2)
 
         # Last day sales
         last_day_sale = float(last_day_map.get(clean_code, 0.0))
@@ -363,6 +409,7 @@ def compute_promo_uplift(
             "normal_14d_sale": round(normal_14d, 1),
             "daily_baseline": round(daily_baseline, 2),
             "baseline_sale": round(baseline_sale, 1),
+            "full_baseline_sale": round(full_baseline_sale, 1),
             "promo_sale": round(promo_sale, 1),
             "last_day_sale": round(last_day_sale, 1),
             "uplift_qty": round(uplift_qty, 1),
@@ -437,6 +484,9 @@ def compute_promo_uplift(
         "beg_date": beg_date_clean,
         "end_date": end_date_clean,
         "promo_days": promo_days,
+        "elapsed_days": elapsed_days,
+        "is_ongoing": is_ongoing,
+        "latest_sales_date": latest_sales_date,
         "pre_beg_date": pre_beg_str,
         "pre_end_date": pre_end_str,
         "summary": summary,

@@ -126,3 +126,57 @@ def test_compute_promo_uplift_empty():
     res = compute_promo_uplift(pd.DataFrame())
     assert res["summary"]["total_skus"] == 0
     assert res["items"] == []
+
+def test_compute_promo_uplift_ongoing_campaign():
+    # 14-day promo from 2026-10-15 to 2026-10-28, but only 3 days recorded
+    df = pd.DataFrame([
+        {"STORE": "101", "CODE": "SKU_ONGOING", "NAME": "Süd", "CATEGORY": "Süd", "PROMO_TYPE": "adi", "FC": 70, "SALE": 45, "FINAL_STOCK": 20}
+    ])
+    # 14 days normal: 140 -> 10 units/day.
+    # In 3 elapsed days: baseline should be 10 * 3 = 30 units (NOT 10 * 14 = 140 units!)
+    # Promo sale: 45 units in 3 days -> Uplift: +15 units (+50% uplift) -> MODERATE
+    mock_daily_sales = [
+        {"date": "2026-10-15", "daily_sale": 15.0, "is_future": False},
+        {"date": "2026-10-16", "daily_sale": 15.0, "is_future": False},
+        {"date": "2026-10-17", "daily_sale": 15.0, "is_future": False},
+        {"date": "2026-10-18", "daily_sale": None, "is_future": True},
+    ]
+    res = compute_promo_uplift(
+        fact_df=df,
+        beg_date="2026-10-15",
+        end_date="2026-10-28",
+        daily_sales_records=mock_daily_sales,
+        custom_baseline_map={"SKU_ONGOING": 140.0},
+        custom_last_day_map={"SKU_ONGOING": 15.0}
+    )
+    assert res["promo_days"] == 14
+    assert res["elapsed_days"] == 3
+    assert res["is_ongoing"] is True
+    assert res["latest_sales_date"] == "2026-10-17"
+
+    item = res["items"][0]
+    assert item["baseline_sale"] == 30.0
+    assert item["promo_sale"] == 45.0
+    assert item["uplift_qty"] == 15.0
+    assert item["uplift_pct"] == 50.0
+    assert item["status"] == "MODERATE"
+    assert item["last_day_sale"] == 15.0
+
+def test_compute_promo_uplift_store_filter():
+    df = pd.DataFrame([
+        {"STORE": "101", "CODE": "SKU1", "NAME": "Cola", "CATEGORY": "İçki", "PROMO_TYPE": "adi", "FC": 50, "SALE": 40, "FINAL_STOCK": 10},
+        {"STORE": "102", "CODE": "SKU1", "NAME": "Cola", "CATEGORY": "İçki", "PROMO_TYPE": "adi", "FC": 50, "SALE": 35, "FINAL_STOCK": 15},
+    ])
+    res = compute_promo_uplift(
+        fact_df=df,
+        beg_date="2026-10-01",
+        end_date="2026-10-05", # 5 days (completed)
+        store_filter="101",
+        custom_baseline_map={"SKU1": 70.0}, # 5 units/day -> 25 units for 5 days
+        custom_last_day_map={"SKU1": 8.0}
+    )
+    assert len(res["items"]) == 1
+    item = res["items"][0]
+    # For store 101 only, promo_sale should be 40 (not 75)
+    assert item["promo_sale"] == 40.0
+    assert item["store_count"] == 1
