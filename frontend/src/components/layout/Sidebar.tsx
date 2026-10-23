@@ -59,7 +59,7 @@ export const Sidebar: React.FC = () => {
     { id: 'matrix', label: t('nav_matrix'), icon: Grid, iconBg: 'bg-cyan-100/90 text-cyan-700 border-cyan-200/90' },
     { id: 'reports', label: t('nav_reports'), icon: FileSpreadsheet, iconBg: 'bg-blue-100/90 text-blue-700 border-blue-200/90' },
     { id: 'settings', label: t('nav_settings'), icon: Settings, iconBg: 'bg-slate-200/90 text-slate-700 border-slate-300/90' },
-    { id: 'promo_distribution', label: 'Forecasting', icon: Boxes, isLocked: true, iconBg: 'bg-emerald-100/90 text-emerald-700 border-emerald-200/90' },
+    { id: 'promo_distribution', label: '', icon: Boxes, isLocked: true, iconBg: 'bg-emerald-100/90 text-emerald-700 border-emerald-200/90' },
   ];
 
   const handleNavClick = (id: string, isLocked?: boolean) => {

@@ -245,10 +245,10 @@ export const Header: React.FC = () => {
         <button
           onClick={() => setShowPresentationMode(true)}
           className="flex items-center space-x-1.5 px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white text-xs font-bold rounded-xl shadow-md shadow-indigo-500/20 active:scale-95 transition-all cursor-pointer"
-          title="TV / Təqdimat Rejimi (Kiosk Fullscreen)"
+          title="Slide / Təqdimat Rejimi (Kiosk Fullscreen)"
         >
           <Tv className="w-3.5 h-3.5 stroke-[2.5]" />
-          <span className="hidden md:inline">TV Rejimi</span>
+          <span className="hidden md:inline">Slide</span>
         </button>
 
         {/* Midnight Executive Dark Mode Toggle */}

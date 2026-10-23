@@ -370,7 +370,7 @@ export const PresentationModeModal: React.FC<PresentationModeModalProps> = ({
             <h1 className="text-lg font-black tracking-tight text-white flex items-center gap-2">
               <span>TAMSTORE</span>
               <span className="text-[10px] font-mono font-bold uppercase tracking-widest px-2 py-0.5 rounded bg-blue-600/30 text-blue-400 border border-blue-500/40">
-                TV KIOSK
+                SLIDE SHOW
               </span>
             </h1>
           </div>

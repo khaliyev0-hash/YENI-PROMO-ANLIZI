@@ -75,7 +75,7 @@ export const PromoDistributionPage: React.FC = () => {
   const [previewData, setPreviewData] = useState<ImportPreviewData | null>(null);
 
   // Planning Configuration
-  const [campaignTitle, setCampaignTitle] = useState<string>('Forecasting Kampaniyası');
+  const [campaignTitle, setCampaignTitle] = useState<string>('Promo Planlaşdırma');
   const [startDate, setStartDate] = useState<string>(() => {
     const d = new Date();
     d.setDate(d.getDate() + 7);
@@ -272,7 +272,7 @@ export const PromoDistributionPage: React.FC = () => {
         <div className="w-16 h-16 rounded-3xl bg-amber-500/10 border border-amber-500/30 text-amber-500 flex items-center justify-center shadow-xl shadow-amber-500/10 mb-4 animate-pulse">
           <Lock className="w-8 h-8 stroke-[2.2]" />
         </div>
-        <h2 className="text-xl font-black text-slate-900 dark:text-white">Forecasting Modulu Kilidlidir</h2>
+        <h2 className="text-xl font-black text-slate-900 dark:text-white">Modul Kilidlidir</h2>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-sm">
           Bu modula giriş məhdudlaşdırılıb. Davam etmək üçün təhlükəsizlik şifrəsini daxil edin.
         </p>
