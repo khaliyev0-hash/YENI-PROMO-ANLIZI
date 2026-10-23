@@ -75,6 +75,11 @@ export const ExecutiveDashboard: React.FC = () => {
   const promoAchievement = promoFc > 0 ? (promoSale / promoFc) * 100 : 0;
   const promoStock = promoFilteredProducts.reduce((sum, p) => sum + (p.total_stock || 0), 0);
   const promoStockoutCount = promoFilteredProducts.reduce((sum, p) => sum + (p.stockout_store_count > 0 ? 1 : 0), 0);
+  const promoTotalCombos = promoFilteredProducts.reduce((sum, p) => sum + (p.store_count || 0), 0);
+  const promoTotalStockouts = promoFilteredProducts.reduce((sum, p) => sum + (p.stockout_store_count || 0), 0);
+  const promoAvailability = promoTotalCombos > 0
+    ? Math.round((100 - (promoTotalStockouts / promoTotalCombos) * 100) * 10) / 10
+    : 100;
 
   const hasStoreFilter = Boolean(
     (filters?.selectedArea && filters.selectedArea !== 'ALL') ||
@@ -96,6 +101,11 @@ export const ExecutiveDashboard: React.FC = () => {
   const storeAchievement = storeFc > 0 ? (storeSale / storeFc) * 100 : 0;
   const storeStock = filteredStoreList.reduce((sum, s) => sum + (s.total_stock || 0), 0);
   const storeStockoutCount = filteredStoreList.reduce((sum, s) => sum + (s.stockout_count > 0 ? 1 : 0), 0);
+  const storeTotalCombos = filteredStoreList.reduce((sum, s) => sum + (s.product_count || 0), 0);
+  const storeTotalStockouts = filteredStoreList.reduce((sum, s) => sum + (s.stockout_count || 0), 0);
+  const storeAvailability = storeTotalCombos > 0
+    ? Math.round((100 - (storeTotalStockouts / storeTotalCombos) * 100) * 10) / 10
+    : 100;
 
   const totalFc = hasPromoFilter
     ? (viewMode === 'PCS' ? promoFc : promoFc * PRICE_MULTIPLIER)
@@ -119,6 +129,27 @@ export const ExecutiveDashboard: React.FC = () => {
 
   const effectiveStock = hasPromoFilter ? promoStock : (hasStoreFilter ? storeStock : (kpi_cards.total_stock || 0));
   const effectiveStockoutCount = hasPromoFilter ? promoStockoutCount : (hasStoreFilter ? storeStockoutCount : (kpi_cards.stockout_stores_count || 0));
+
+  const baseAvailability = Number(kpi_cards.availability_pct ?? (100 - (kpi_cards.stockout_rate_pct || 0)));
+  const effectiveAvailability = hasPromoFilter
+    ? promoAvailability
+    : hasStoreFilter
+    ? storeAvailability
+    : baseAvailability;
+
+  const stockoutSubtext = hasPromoFilter
+    ? (filters?.selectedProduct
+        ? `Stokout: ${promoFilteredProducts[0]?.stockout_store_count || 0} mğ.`
+        : `Stokout: ${effectiveStockoutCount} məhsul`)
+    : hasStoreFilter
+    ? `Stokout: ${effectiveStockoutCount} mğ.`
+    : `Stokout: ${kpi_cards.stockout_stores_count || 0} mğ.`;
+
+  const availabilitySubtext = hasPromoFilter
+    ? `OSA (${promoFilteredProducts.length} məhsul üzrə)`
+    : hasStoreFilter
+    ? `OSA (${filteredStoreList.length} mağaza üzrə)`
+    : "Total Mağaza Mövcudluğu (OSA)";
 
   // Pro-rata & Projection calculation using actual campaign dates when available
   const activeCampaign = campaigns?.find((c) => c.is_active) || campaigns?.find((c) => c.id === activeCampaignId) || campaigns?.[0];
@@ -332,23 +363,23 @@ export const ExecutiveDashboard: React.FC = () => {
         {/* Neytral/məlumat xarakterli: Mağaza Stoku -> solid indigo */}
         <KPICard
           index={4}
-          title={t('kpi_store_stock')}
-          value={`${(kpi_cards.total_stock || 0).toLocaleString()} u`}
+          title={viewMode === 'PCS' ? t('kpi_store_stock') : `${t('kpi_store_stock')} (₼)`}
+          value={viewMode === 'PCS' ? `${Math.round(effectiveStock).toLocaleString()} u` : `₼ ${Math.round(effectiveStock * PRICE_MULTIPLIER).toLocaleString()}`}
           icon={Layers}
           color="indigo"
           variant="solid"
-          subtext={`Stokout: ${kpi_cards.stockout_stores_count || 0} mğ.`}
+          subtext={stockoutSubtext}
         />
 
         {/* Ort. Mövcudluq -> soft blue or rose */}
         <KPICard
           index={5}
           title={t('kpi_avg_availability')}
-          value={`${kpi_cards.availability_pct ?? (100 - (kpi_cards.stockout_rate_pct || 0)).toFixed(1)}%`}
+          value={`${effectiveAvailability.toFixed(1)}%`}
           icon={Store}
-          color={(kpi_cards.availability_pct ?? (100 - (kpi_cards.stockout_rate_pct || 0))) >= 85 ? 'blue' : 'rose'}
+          color={effectiveAvailability >= 85 ? 'blue' : 'rose'}
           variant="soft"
-          subtext="Total Mağaza Mövcudluğu (OSA)"
+          subtext={availabilitySubtext}
         />
       </div>
 
